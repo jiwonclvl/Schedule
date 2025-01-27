@@ -4,6 +4,8 @@ import com.example.schedule.entity.Schedule;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Getter
 public class ScheduleResponseDto {
 
@@ -16,22 +18,18 @@ public class ScheduleResponseDto {
     //작성자명
     private final String author;
 
-    //비밀번호
-    private final String password;
-
     // 작성일
     private final String createAt;
 
     // 수정일
     private final String updateAt;
 
-    public ScheduleResponseDto(Schedule schedule) {
-        this.id = schedule.getId();
-        this.todo = schedule.getTodo();
-        this.author = schedule.getAuthor();
-        this.password = schedule.getPassword();
-        this.createAt = schedule.getCreateAt();
-        this.updateAt = schedule.getCreateAt();
+    public ScheduleResponseDto(Long id, String author, String todo, String creatAt, String updateAt) {
+        this.id = id;
+        this.author = author;
+        this.todo = todo;
+        this.createAt = creatAt;
+        this.updateAt = updateAt;
     }
 
 }

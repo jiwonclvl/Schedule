@@ -15,6 +15,4 @@ public class ScheduleRequestDto {
     //비밀번호
     private String password;
 
-    // 작성일
-    private String createAt;
 }
