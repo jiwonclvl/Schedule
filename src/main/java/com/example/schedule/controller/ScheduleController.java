@@ -30,18 +30,31 @@ public class ScheduleController {
        return new ResponseEntity<>(scheduleService.saveSchedule(dto),HttpStatus.CREATED);
    }
 
-//   //전체 일정 조회하기
-//    @GetMapping
-//    public ResponseEntity<List<ScheduleResponseDto>> findAllSchedules() {
-////       List<ScheduleResponseDto> scheduleResponseDtoList = new ArrayList<>();
-////
-////       //배열에 추가
-////       for(Schedule schedule : scheduleList.values()) {
-////           scheduleResponseDtoList.add(new ScheduleResponseDto(schedule));
-////       }
-////
-////       return new ResponseEntity<>(scheduleResponseDtoList, HttpStatus.OK);
-//    }
+    //전체 일정 조회하기
+    @GetMapping
+    public ResponseEntity<List<ScheduleResponseDto>> findAllSchedules(
+            @RequestParam(required = false) String author,
+            @RequestParam(required = false) String update
 
+    ) {
+
+        //작성자명 & 날짜에 따른 전체 일정 조회하기
+       return new ResponseEntity<>(scheduleService.findAllSchedule(author, update), HttpStatus.OK);
+    }
+
+    //일정 단건 조회하기
+    @GetMapping("/{id}")
+    public ResponseEntity<ScheduleResponseDto> findScheduleById(@PathVariable Long id) {
+        return new ResponseEntity<>(scheduleService.findScheduleById(id), HttpStatus.OK);
+    }
+
+//    //일정 수정하기
+//    @PatchMapping("/{id}")
+//    public ResponseEntity<ScheduleResponseDto> updateSchedule(
+//            @PathVariable Long id,
+//            @RequestBody ScheduleRequestDto dto
+//    ) {
+//        return new ResponseEntity<>(scheduleService.updateSchedule(id, dto),HttpStatus.OK);
+//    }
 
 }

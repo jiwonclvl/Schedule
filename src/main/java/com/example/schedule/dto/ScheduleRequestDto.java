@@ -15,4 +15,5 @@ public class ScheduleRequestDto {
     //비밀번호
     private String password;
 
+
 }

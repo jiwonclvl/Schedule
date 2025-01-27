@@ -6,11 +6,14 @@ import com.example.schedule.entity.Schedule;
 import com.example.schedule.repository.ScheduleRepository;
 import org.springframework.stereotype.Service;
 
+
+import java.util.List;
+
 @Service
 public class ScheduleServiceImpl implements ScheduleService {
 
     //필드
-    private ScheduleRepository scheduleRepository;
+    private final ScheduleRepository scheduleRepository;
 
     //생성자
     public ScheduleServiceImpl(ScheduleRepository scheduleRepository) {
@@ -27,4 +30,35 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleRepository.saveSchedule(schedule);
 
     }
+
+    //일정 전체 조회하기
+    @Override
+    public List<ScheduleResponseDto> findAllSchedule(String author, String update) {
+
+        //둘 다 입력하지 않은 경우
+        if ("".equals(author) && "".equals(update)) {
+            return scheduleRepository.findAllSchedule();
+        }
+
+        return scheduleRepository.findAllSchedule(author, update);
+    }
+
+    //일정 단건 조회하기
+    @Override
+    public ScheduleResponseDto findScheduleById(Long id) {
+        return scheduleRepository.findScheduleById(id);
+    }
+
+//    //일정 수정하기
+//    @Override
+//    public ScheduleResponseDto updateSchedule(Long id, ScheduleRequestDto dto) {
+//
+//        scheduleRepository.updateSchedule(id, dto.getTodo(), dto.getAuthor(), dto.getPassword());
+//       return null;
+//    }
+
+
+
+
+
 }
