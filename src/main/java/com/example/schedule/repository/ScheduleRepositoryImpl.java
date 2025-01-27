@@ -114,6 +114,12 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         return jdbcTemplate.update("update schedule set author = ?, todo = ? , update_date = ? where id = ? and password = ? ", author, todo,update, id, password);
     }
 
+    //일정 삭제하기
+    @Override
+    public int deleteSchedule(Long id) {
+        return jdbcTemplate.update("delete from schedule where id = ?", id);
+    }
+
     //날짜 출력 형식 변경
     private String localDateTimeFormat(LocalDateTime create) {
         return create.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));

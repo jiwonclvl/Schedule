@@ -19,4 +19,7 @@ public interface ScheduleRepository {
     //일정 수정하기
     int updateSchedule(Long id, String todo, String author, String password);
 
+    //일정 삭제하기
+    int deleteSchedule(Long id);
+
 }

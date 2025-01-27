@@ -1,5 +1,6 @@
 package com.example.schedule.controller;
 
+import com.example.schedule.docs.ControllerDocs;
 import com.example.schedule.dto.ScheduleRequestDto;
 import com.example.schedule.dto.ScheduleResponseDto;
 import com.example.schedule.entity.Schedule;
@@ -13,7 +14,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/schedules")
-public class ScheduleController {
+public class ScheduleController implements ControllerDocs {
 
     //필드
     private final ScheduleService scheduleService;
@@ -24,13 +25,16 @@ public class ScheduleController {
     }
 
    //일정 생성하기
+   @Override
    @PostMapping
     public ResponseEntity<ScheduleResponseDto> createSchedule(@RequestBody ScheduleRequestDto dto) {
 
        return new ResponseEntity<>(scheduleService.saveSchedule(dto),HttpStatus.CREATED);
    }
 
+
     //전체 일정 조회하기
+    @Override
     @GetMapping
     public ResponseEntity<List<ScheduleResponseDto>> findAllSchedules(
             @RequestParam(required = false) String author,
@@ -57,11 +61,12 @@ public class ScheduleController {
         return new ResponseEntity<>(scheduleService.updateSchedule(id, dto),HttpStatus.OK);
     }
 
-//    //일정 삭제하기
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<ScheduleResponseDto> deleteSchedule(@PathVariable Long id) {
-//        return ResponseEntity<>(scheduleService.deleteSchedule(id),HttpStatus.OK);
-//    }
+    //일정 삭제하기
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteSchedule(@PathVariable Long id) {
+        scheduleService.deleteSchedule(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 
 }

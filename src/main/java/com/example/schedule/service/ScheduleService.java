@@ -18,6 +18,6 @@ public interface ScheduleService {
     //일정 수정하기
     ScheduleResponseDto updateSchedule(Long id, ScheduleRequestDto dto);
 
-//    //일정 삭제하기
-//    ScheduleResponseDto deleteSchedule(Long id);
+    //일정 삭제하기
+    void deleteSchedule(Long id);
 }

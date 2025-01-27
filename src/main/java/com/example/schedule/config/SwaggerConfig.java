@@ -13,7 +13,7 @@ public class SwaggerConfig {
         Info info = new Info()
                 .version("v1.0") //버전
                 .title("일정 관리 API") //이름
-                .description("일정을 관리 프로젝트 API"); //설명
+                .description("일정 관리 프로젝트 API"); //설명
         return new OpenAPI()
                 .info(info);
     }

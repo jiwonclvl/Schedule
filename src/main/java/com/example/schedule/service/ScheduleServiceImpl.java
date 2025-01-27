@@ -72,10 +72,14 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleRepository.findScheduleById(id);
     }
 
-//    @Override
-//    public ScheduleResponseDto deleteSchedule(Long id) {
-//        return null;
-//    }
+    //일정 삭제하기
+    @Override
+    public void deleteSchedule(Long id) {
+        int delete = scheduleRepository.deleteSchedule(id);
+        if(delete == 0){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist id = " + id);
+        }
+    }
 
 
 }
