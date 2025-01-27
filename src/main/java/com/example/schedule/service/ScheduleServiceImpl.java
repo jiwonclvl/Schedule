@@ -4,7 +4,10 @@ import com.example.schedule.dto.ScheduleRequestDto;
 import com.example.schedule.dto.ScheduleResponseDto;
 import com.example.schedule.entity.Schedule;
 import com.example.schedule.repository.ScheduleRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 
 import java.util.List;
@@ -49,16 +52,30 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleRepository.findScheduleById(id);
     }
 
-//    //일정 수정하기
+    //일정 수정하기
+    @Transactional
+    @Override
+    public ScheduleResponseDto updateSchedule(Long id, ScheduleRequestDto dto) {
+
+        //둘 다 입력하지 않은 경우
+        if (dto.getTodo() == null && dto.getAuthor() == null) {
+           throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing required fields");
+        }
+
+        int update = scheduleRepository.updateSchedule(id, dto.getTodo(), dto.getAuthor(), dto.getPassword());
+
+        //쿼리를 0번 적용했다면 id가 없다는 의미
+        if(update == 0){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist id = " + id);
+        }
+
+        return scheduleRepository.findScheduleById(id);
+    }
+
 //    @Override
-//    public ScheduleResponseDto updateSchedule(Long id, ScheduleRequestDto dto) {
-//
-//        scheduleRepository.updateSchedule(id, dto.getTodo(), dto.getAuthor(), dto.getPassword());
-//       return null;
+//    public ScheduleResponseDto deleteSchedule(Long id) {
+//        return null;
 //    }
-
-
-
 
 
 }

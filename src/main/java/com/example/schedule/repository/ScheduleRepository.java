@@ -17,4 +17,6 @@ public interface ScheduleRepository {
     ScheduleResponseDto findScheduleById(Long id);
 
     //일정 수정하기
+    int updateSchedule(Long id, String todo, String author, String password);
+
 }

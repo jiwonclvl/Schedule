@@ -1,10 +1,6 @@
 package com.example.schedule.dto;
 
-import com.example.schedule.entity.Schedule;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
 
 @Getter
 public class ScheduleResponseDto {
@@ -31,5 +27,6 @@ public class ScheduleResponseDto {
         this.createAt = creatAt;
         this.updateAt = updateAt;
     }
+
 
 }

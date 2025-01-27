@@ -60,7 +60,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 
         //저장
         Number id = insert.executeAndReturnKey(new MapSqlParameterSource(params));
-        return new ScheduleResponseDto(id.longValue(), schedule.getAuthor(), schedule.getTodo(),createTimeFormat,createTimeFormat);
+        return new ScheduleResponseDto(id.longValue(), schedule.getAuthor(), schedule.getTodo(), createTimeFormat, createTimeFormat);
     }
 
     //일정 전체 조회 (조건이 없는 경우)
@@ -75,12 +75,12 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 
 
         //날짜만 입력된 경우
-        if(author == null || "".equals(author)) {
+        if (author == null || "".equals(author)) {
             return jdbcTemplate.query("select * from schedule where  date_format(update_date, '%Y-%m-%d') = ? order by update_date desc", scheduleRowMapper(), update);
         }
 
         //작성자명만 입력된 경우
-        if(update == null || "".equals(update)) {
+        if (update == null || "".equals(update)) {
             return jdbcTemplate.query("select * from schedule where  author = ? order by update_date desc", scheduleRowMapper(), author);
         }
 
@@ -92,7 +92,26 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     @Override
     public ScheduleResponseDto findScheduleById(Long id) {
         List<ScheduleResponseDto> result = jdbcTemplate.query("select * from schedule where id = ?", scheduleRowMapper(), id);
-        return result.stream().findAny().orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist id= " + id));
+        return result.stream().findAny().orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist id= " + id));
+    }
+
+    //일정 수정하기
+    @Override
+    public int updateSchedule(Long id, String todo, String author, String password) {
+
+        //수정일 변경
+        LocalDateTime update = LocalDateTime.now();
+
+        //할 일만 수정 경우 (아이디와 비밀번호가 일치하는 경우에만 변경)
+        if (author == null || "".equals(author)) {
+            return jdbcTemplate.update("update schedule set todo = ?, update_date = ? where id = ? and password = ? ", todo,update, id, password);
+        }
+        //작성자명만 수정하는 경우 (아이디와 비밀번호가 일치하는 경우에만 변경)
+        if (todo == null || "".equals(todo)) {
+            return jdbcTemplate.update("update schedule set author = ? , update_date = ? where id = ? and password = ? ", author,update, id, password);
+        }
+
+        return jdbcTemplate.update("update schedule set author = ?, todo = ? , update_date = ? where id = ? and password = ? ", author, todo,update, id, password);
     }
 
     //날짜 출력 형식 변경

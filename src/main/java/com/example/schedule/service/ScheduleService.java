@@ -15,6 +15,9 @@ public interface ScheduleService {
     //일정 단건 조회
     ScheduleResponseDto findScheduleById(Long id);
 
-//    //일정 수정하기
-//    ScheduleResponseDto updateSchedule(Long id, ScheduleRequestDto dto);
+    //일정 수정하기
+    ScheduleResponseDto updateSchedule(Long id, ScheduleRequestDto dto);
+
+//    //일정 삭제하기
+//    ScheduleResponseDto deleteSchedule(Long id);
 }

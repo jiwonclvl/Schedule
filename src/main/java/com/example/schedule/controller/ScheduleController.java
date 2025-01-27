@@ -48,13 +48,20 @@ public class ScheduleController {
         return new ResponseEntity<>(scheduleService.findScheduleById(id), HttpStatus.OK);
     }
 
-//    //일정 수정하기
-//    @PatchMapping("/{id}")
-//    public ResponseEntity<ScheduleResponseDto> updateSchedule(
-//            @PathVariable Long id,
-//            @RequestBody ScheduleRequestDto dto
-//    ) {
-//        return new ResponseEntity<>(scheduleService.updateSchedule(id, dto),HttpStatus.OK);
+    //일정 수정하기
+    @PatchMapping("/{id}")
+    public ResponseEntity<ScheduleResponseDto> updateSchedule(
+            @PathVariable Long id,
+            @RequestBody ScheduleRequestDto dto
+    ) {
+        return new ResponseEntity<>(scheduleService.updateSchedule(id, dto),HttpStatus.OK);
+    }
+
+//    //일정 삭제하기
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<ScheduleResponseDto> deleteSchedule(@PathVariable Long id) {
+//        return ResponseEntity<>(scheduleService.deleteSchedule(id),HttpStatus.OK);
 //    }
+
 
 }
