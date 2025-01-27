@@ -13,12 +13,8 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,10 +39,6 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         //key = id인 schedule 테이블에 저장
         insert.withTableName("schedule").usingGeneratedKeyColumns("id");
 
-        //LocalDateTime 타입을 DB에 넣을 형식으로 변환
-        Timestamp create = Timestamp.valueOf(schedule.getCreateAt());
-        Timestamp update = Timestamp.valueOf(schedule.getUpdateAt());
-
         //사용자에게 보여줄 날짜 출력 형식 변경 (YYYY-MM-DD로 변경)
         String createTimeFormat = localDateTimeFormat(schedule.getCreateAt());
 
@@ -55,8 +47,8 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         params.put("author", schedule.getAuthor());
         params.put("password", schedule.getPassword());
         params.put("todo", schedule.getTodo());
-        params.put("create_date", create);
-        params.put("update_date", update);
+        params.put("create_date", schedule.getCreateAt());
+        params.put("update_date", schedule.getUpdateAt());
 
         //저장
         Number id = insert.executeAndReturnKey(new MapSqlParameterSource(params));
@@ -94,22 +86,28 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         return result.stream().findAny().orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist id= " + id));
     }
 
-    //일정 수정하기
+    //일정 수정하기(할일만 수정)
     @Override
-    public int updateSchedule(Long id, String todo, String author, String password) {
+    public int updateScheduleTodo(Long id, String todo, String password) {
 
         //수정일 변경
         LocalDateTime update = LocalDateTime.now();
+        return jdbcTemplate.update("update schedule set todo = ?, update_date = ? where id = ? and password = ? ", todo,update, id, password);
+    }
 
-        //할 일만 수정 경우 (아이디와 비밀번호가 일치하는 경우에만 변경)
-        if (author == null || "".equals(author)) {
-            return jdbcTemplate.update("update schedule set todo = ?, update_date = ? where id = ? and password = ? ", todo,update, id, password);
-        }
-        //작성자명만 수정하는 경우 (아이디와 비밀번호가 일치하는 경우에만 변경)
-        if (todo == null || "".equals(todo)) {
-            return jdbcTemplate.update("update schedule set author = ? , update_date = ? where id = ? and password = ? ", author,update, id, password);
-        }
+    //일정 수정하기(작성자명만 수정)
+    @Override
+    public int updateScheduleAuthor(Long id, String author, String password) {
+        //수정일 변경
+        LocalDateTime update = LocalDateTime.now();
+        return jdbcTemplate.update("update schedule set author = ? , update_date = ? where id = ? and password = ? ", author,update, id, password);
+    }
 
+    //일정 수정하기(전체 수정)
+    @Override
+    public int updateSchedule(Long id, String todo, String author, String password) {
+        //수정일 변경
+        LocalDateTime update = LocalDateTime.now();
         return jdbcTemplate.update("update schedule set author = ?, todo = ? , update_date = ? where id = ? and password = ? ", author, todo,update, id, password);
     }
 

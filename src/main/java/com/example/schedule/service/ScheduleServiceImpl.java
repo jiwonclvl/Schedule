@@ -27,7 +27,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public ScheduleResponseDto saveSchedule(ScheduleRequestDto dto) {
         //전달 받은 데이터를 통해 일정 객체 생성
-        Schedule schedule = new Schedule(dto.getTodo(), dto.getAuthor(), dto.getPassword());
+        Schedule schedule = new Schedule(dto.getAuthor(), dto.getPassword(), dto.getTodo());
 
         return scheduleRepository.saveSchedule(schedule);
     }
@@ -42,12 +42,12 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
 
         //날짜만 입력된 경우
-        if (author == null || "".equals(author)) {
+        if ( "".equals(author)) {
             return scheduleRepository.findAllScheduleByUpdate(update);
         }
 
         //작성자명만 입력된 경우
-        if (update == null || "".equals(update)) {
+        if ("".equals(update)) {
             return scheduleRepository.findAllScheduleByAuthor(author);
         }
 
@@ -64,13 +64,25 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Transactional
     @Override
     public ScheduleResponseDto updateSchedule(Long id, ScheduleRequestDto dto) {
+        int update = 0;
 
         //둘 다 입력하지 않은 경우
         if (dto.getTodo() == null && dto.getAuthor() == null) {
            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing required fields");
         }
 
-        int update = scheduleRepository.updateSchedule(id, dto.getTodo(), dto.getAuthor(), dto.getPassword());
+        //할 일만 수정 경우 (아이디와 비밀번호가 일치하는 경우에만 변경)
+        if (dto.getAuthor() == null) {
+            update = scheduleRepository.updateScheduleTodo(id, dto.getTodo(), dto.getPassword());
+        }
+        //작성자명만 수정하는 경우 (아이디와 비밀번호가 일치하는 경우에만 변경)
+        if (dto.getTodo() == null) {
+            update = scheduleRepository.updateScheduleAuthor(id, dto.getAuthor(), dto.getPassword());
+        }
+        //둘 다 수정하는 경우
+        if(dto.getAuthor() != null && dto.getTodo() != null) {
+            update = scheduleRepository.updateSchedule(id, dto.getTodo(), dto.getAuthor(), dto.getPassword());
+        }
 
         //쿼리를 0번 적용했다면 id가 없다는 의미
         if(update == 0){
