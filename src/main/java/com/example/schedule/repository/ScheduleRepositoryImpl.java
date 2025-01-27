@@ -34,21 +34,21 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    //일정 생성하기
     @Override
     public ScheduleResponseDto saveSchedule(Schedule schedule) {
-        //데이터 저장 시 사용
+        //데이터베이스에 데이터 저장 시 사용
         SimpleJdbcInsert insert = new SimpleJdbcInsert(this.jdbcTemplate);
 
-        //schedule 데이블에 저장 && key = id
+        //key = id인 schedule 테이블에 저장
         insert.withTableName("schedule").usingGeneratedKeyColumns("id");
 
-        //DB에 넣을 형식으로 변환
+        //LocalDateTime 타입을 DB에 넣을 형식으로 변환
         Timestamp create = Timestamp.valueOf(schedule.getCreateAt());
         Timestamp update = Timestamp.valueOf(schedule.getUpdateAt());
 
-        //날짜 출력 형식 변경
+        //사용자에게 보여줄 날짜 출력 형식 변경 (YYYY-MM-DD로 변경)
         String createTimeFormat = localDateTimeFormat(schedule.getCreateAt());
-
 
         //배열에 값 넣기
         Map<String, Object> params = new HashMap<>();
@@ -63,28 +63,27 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         return new ScheduleResponseDto(id.longValue(), schedule.getAuthor(), schedule.getTodo(), createTimeFormat, createTimeFormat);
     }
 
-    //일정 전체 조회 (조건이 없는 경우)
+    //일정 전체 조회 (입력이 없는 경우)
     @Override
     public List<ScheduleResponseDto> findAllSchedule() {
         return jdbcTemplate.query("select * from schedule order by update_date desc", scheduleRowMapper());
     }
 
-    //일정 전체 조회 (조건이 있는 경우)
+    //일정 전체 조회 (날짜만 입력한 경우)
+    @Override
+    public List<ScheduleResponseDto> findAllScheduleByUpdate(String update) {
+        return jdbcTemplate.query("select * from schedule where  date_format(update_date, '%Y-%m-%d') = ? order by update_date desc", scheduleRowMapper(), update);
+    }
+
+    //일정 전체 조회 (작성자만 입력한 경우)
+    @Override
+    public List<ScheduleResponseDto> findAllScheduleByAuthor(String author) {
+        return jdbcTemplate.query("select * from schedule where  author = ? order by update_date desc", scheduleRowMapper(), author);
+    }
+
+    //일정 전체 조회 (모두 입력한 경우)
     @Override
     public List<ScheduleResponseDto> findAllSchedule(String author, String update) {
-
-
-        //날짜만 입력된 경우
-        if (author == null || "".equals(author)) {
-            return jdbcTemplate.query("select * from schedule where  date_format(update_date, '%Y-%m-%d') = ? order by update_date desc", scheduleRowMapper(), update);
-        }
-
-        //작성자명만 입력된 경우
-        if (update == null || "".equals(update)) {
-            return jdbcTemplate.query("select * from schedule where  author = ? order by update_date desc", scheduleRowMapper(), author);
-        }
-
-        //둘다 입력된 경우
         return jdbcTemplate.query("select * from schedule where author = ? and date_format(update_date, '%Y-%m-%d') = ? order by update_date desc", scheduleRowMapper(), author, update);
     }
 

@@ -9,8 +9,16 @@ public interface ScheduleRepository {
     //일정 저장하기
     ScheduleResponseDto saveSchedule(Schedule schedule);
 
-    //일정 전체 조회하기
+    //일정 전체 조회하기(입력이 없는 경우)
     List<ScheduleResponseDto> findAllSchedule();
+
+    //일정 전체 조회하기(날짜만 입력한 경우)
+    List<ScheduleResponseDto> findAllScheduleByUpdate(String update);
+
+    //일정 전체 조회하기(작성자만 입력한 경우)
+    List<ScheduleResponseDto> findAllScheduleByAuthor(String author);
+
+    //일정 전체 조회하기(모두 입력한 경우)
     List<ScheduleResponseDto> findAllSchedule(String author, String update);
 
     //일정 단건 조회하기

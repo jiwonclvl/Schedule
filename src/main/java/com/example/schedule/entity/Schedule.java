@@ -28,8 +28,7 @@ public class Schedule {
         this.author = author;
         this.password = password;
         this.todo = todo;
-        //현재 시간 
-        this.createAt = LocalDateTime.now();
+        this.createAt = LocalDateTime.now(); //객체 생성 시 현재 시간
         this.updateAt = LocalDateTime.now();
     }
 

@@ -26,12 +26,10 @@ public class ScheduleServiceImpl implements ScheduleService {
     //일정 생성하기
     @Override
     public ScheduleResponseDto saveSchedule(ScheduleRequestDto dto) {
-        //전달 받은 데이터를 통해 일정 생성
+        //전달 받은 데이터를 통해 일정 객체 생성
         Schedule schedule = new Schedule(dto.getTodo(), dto.getAuthor(), dto.getPassword());
 
-        //데이터 저장하기
         return scheduleRepository.saveSchedule(schedule);
-
     }
 
     //일정 전체 조회하기
@@ -41,6 +39,16 @@ public class ScheduleServiceImpl implements ScheduleService {
         //둘 다 입력하지 않은 경우
         if ("".equals(author) && "".equals(update)) {
             return scheduleRepository.findAllSchedule();
+        }
+
+        //날짜만 입력된 경우
+        if (author == null || "".equals(author)) {
+            return scheduleRepository.findAllScheduleByUpdate(update);
+        }
+
+        //작성자명만 입력된 경우
+        if (update == null || "".equals(update)) {
+            return scheduleRepository.findAllScheduleByAuthor(author);
         }
 
         return scheduleRepository.findAllSchedule(author, update);

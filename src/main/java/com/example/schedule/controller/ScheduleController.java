@@ -32,17 +32,13 @@ public class ScheduleController implements ControllerDocs {
        return new ResponseEntity<>(scheduleService.saveSchedule(dto),HttpStatus.CREATED);
    }
 
-
     //전체 일정 조회하기
     @Override
     @GetMapping
     public ResponseEntity<List<ScheduleResponseDto>> findAllSchedules(
             @RequestParam(required = false) String author,
             @RequestParam(required = false) String update
-
     ) {
-
-        //작성자명 & 날짜에 따른 전체 일정 조회하기
        return new ResponseEntity<>(scheduleService.findAllSchedule(author, update), HttpStatus.OK);
     }
 
