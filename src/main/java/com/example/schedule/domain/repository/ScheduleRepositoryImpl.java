@@ -41,7 +41,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         insert.withTableName("schedule").usingGeneratedKeyColumns("id");
 
         //사용자에게 보여줄 날짜 출력 형식 변경 (YYYY-MM-DD로 변경)
-        String createTimeFormat = localDateTimeFormat(schedule.getCreateAt());
+//        String createTimeFormat = localDateTimeFormat(schedule.getCreateAt());
 
         //배열에 값 넣기
         Map<String, Object> params = new HashMap<>();
@@ -53,7 +53,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 
         //저장
         Number id = insert.executeAndReturnKey(new MapSqlParameterSource(params));
-        return new ScheduleResponseDto(id.longValue(), schedule.getAuthor(), schedule.getTodo(), createTimeFormat, createTimeFormat);
+        return new ScheduleResponseDto(id.longValue(), schedule.getAuthor(), schedule.getTodo(), schedule.getCreateAt(), schedule.getCreateAt());
     }
 
     //일정 전체 조회
@@ -118,10 +118,10 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         return jdbcTemplate.update("delete from schedule where id = ?", id);
     }
 
-    //날짜 출력 형식 변경
-    private String localDateTimeFormat(LocalDateTime create) {
-        return create.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-    }
+//    //날짜 출력 형식 변경
+//    private String localDateTimeFormat(LocalDateTime create) {
+//        return create.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+//    }
 
     //List 형태로 만들기
     private RowMapper<ScheduleResponseDto> scheduleRowMapper() {
@@ -132,8 +132,8 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
                         rs.getLong("id"),
                         rs.getString("author"),
                         rs.getString("todo"),
-                        rs.getTimestamp("create_date").toLocalDateTime().toString(),
-                        rs.getTimestamp("update_date").toLocalDateTime().toString()
+                        rs.getTimestamp("create_date").toLocalDateTime(),
+                        rs.getTimestamp("update_date").toLocalDateTime()
                 );
             }
         };

@@ -2,6 +2,8 @@ package com.example.schedule.application.dto;
 
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Getter
 public class ScheduleResponseDto {
 
@@ -15,12 +17,12 @@ public class ScheduleResponseDto {
     private final String author;
 
     // 작성일
-    private final String createAt;
+    private final LocalDateTime createAt;
 
     // 수정일
-    private final String updateAt;
+    private final LocalDateTime updateAt;
 
-    public ScheduleResponseDto(Long id, String author, String todo, String creatAt, String updateAt) {
+    public ScheduleResponseDto(Long id, String author, String todo, LocalDateTime creatAt, LocalDateTime updateAt) {
         this.id = id;
         this.author = author;
         this.todo = todo;
