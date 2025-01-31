@@ -55,5 +55,8 @@ public interface ControllerDocs {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "일정 삭제 성공"),
             @ApiResponse(responseCode = "400", description = "일정 삭제 실패") })
-    public ResponseEntity<Void> deleteSchedule(@PathVariable Long id);
+    public ResponseEntity<Void> deleteSchedule(
+            @PathVariable Long id,
+            @RequestBody String password
+    );
 }

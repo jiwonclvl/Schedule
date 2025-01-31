@@ -68,8 +68,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     //일정 삭제하기
     @Override
-    public void deleteSchedule(Long id) {
-        int delete = scheduleRepository.deleteSchedule(id);
+    public void deleteSchedule(Long id, String password) {
+        int delete = scheduleRepository.deleteSchedule(id, password);
         if(delete == 0){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist id = " + id);
         }

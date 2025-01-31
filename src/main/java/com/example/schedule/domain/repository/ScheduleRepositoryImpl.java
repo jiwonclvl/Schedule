@@ -15,7 +15,6 @@ import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +62,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         String sql = "select * from schedule";
 
         //입력이 아무것도 없는 경우
-        if (!StringUtils.hasText (author) && !StringUtils.hasText (update)) {
+        if (!StringUtils.hasText(author) && !StringUtils.hasText (update)) {
             return jdbcTemplate.query(sql, scheduleRowMapper());
         }
         //날짜만 입력된 경우
@@ -76,7 +75,6 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
             sql += " where author = ? order by update_date desc";
             return jdbcTemplate.query(sql, scheduleRowMapper(), author);
         }
-
         //둘 다 입력한 경우
         sql += " where author = ? or date_format(update_date, '%Y-%m-%d')  = ? order by update_date desc";
         return jdbcTemplate.query(sql, scheduleRowMapper(),author, update);
@@ -114,8 +112,8 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 
     //일정 삭제하기
     @Override
-    public int deleteSchedule(Long id) {
-        return jdbcTemplate.update("delete from schedule where id = ?", id);
+    public int deleteSchedule(Long id, String password) {
+        return jdbcTemplate.update("delete from schedule where id = ? and password = ?", id, password);
     }
 
 //    //날짜 출력 형식 변경

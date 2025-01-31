@@ -58,8 +58,11 @@ public class ScheduleController implements ControllerDocs {
 
     //일정 삭제하기
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSchedule(@PathVariable Long id) {
-        scheduleService.deleteSchedule(id);
+    public ResponseEntity<Void> deleteSchedule(
+            @PathVariable Long id,
+            @RequestBody String password
+    ) {
+        scheduleService.deleteSchedule(id, password);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

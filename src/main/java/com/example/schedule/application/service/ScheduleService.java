@@ -19,5 +19,5 @@ public interface ScheduleService {
     ScheduleResponseDto updateSchedule(Long id, ScheduleRequestDto dto);
 
     //일정 삭제하기
-    void deleteSchedule(Long id);
+    void deleteSchedule(Long id, String password);
 }
