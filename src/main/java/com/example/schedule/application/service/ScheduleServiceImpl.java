@@ -7,6 +7,7 @@ import com.example.schedule.domain.repository.ScheduleRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 
@@ -45,61 +46,17 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleRepository.findScheduleById(id);
     }
 
-    //일정 전체 수정
+    //일정 수정
     @Transactional
     @Override
     public ScheduleResponseDto updateSchedule(Long id, ScheduleRequestDto dto) {
-        int update = 0;
 
         //둘 다 입력하지 않은 경우
-        if (dto.getTodo() == null && dto.getAuthor() == null) {
+        if (!StringUtils.hasText(dto.getTodo()) && !StringUtils.hasText(dto.getAuthor())) {
            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing required fields");
         }
 
-        //작성자명만 수정하는 경우 (아이디와 비밀번호가 일치하는 경우에만 변경)
-        if (dto.getTodo() == null) {
-            update = scheduleRepository.updateScheduleAuthor(id, dto.getAuthor(), dto.getPassword());
-        }
-        //둘 다 수정하는 경우
-        if(dto.getAuthor() != null && dto.getTodo() != null) {
-            update = scheduleRepository.updateSchedule(id, dto.getTodo(), dto.getAuthor(), dto.getPassword());
-        }
-
-        //쿼리를 0번 적용했다면 id가 없다는 의미
-        if(update == 0){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist id = " + id);
-        }
-
-        return scheduleRepository.findScheduleById(id);
-    }
-
-    //일정 할일 수정
-    @Override
-    public ScheduleResponseDto updateScheduleTodo(Long id, ScheduleRequestDto dto) {
-        //할일을 입력하지 않고 작성자명을 입력한 경우 예외 처리
-        if (dto.getTodo() == null && dto.getAuthor() != null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing required fields");
-        }
-
-        int update = scheduleRepository.updateScheduleTodo(id, dto.getTodo(), dto.getPassword());
-
-        //쿼리를 0번 적용했다면 id가 없다는 의미
-        if(update == 0){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist id = " + id);
-        }
-
-        return scheduleRepository.findScheduleById(id);
-    }
-
-    //일정 작성자명 수정
-    @Override
-    public ScheduleResponseDto updateScheduleAuthor(Long id, ScheduleRequestDto dto) {
-        //할일을 입력하지 않고 작성자명을 입력한 경우 예외 처리
-        if (dto.getTodo() != null && dto.getAuthor() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing required fields");
-        }
-
-        int update = scheduleRepository.updateScheduleAuthor(id, dto.getAuthor(), dto.getPassword());
+        int update = scheduleRepository.updateSchedule(id, dto.getPassword(), dto.getAuthor(), dto.getTodo());
 
         //쿼리를 0번 적용했다면 id가 없다는 의미
         if(update == 0){
@@ -117,6 +74,4 @@ public class ScheduleServiceImpl implements ScheduleService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist id = " + id);
         }
     }
-
-
 }

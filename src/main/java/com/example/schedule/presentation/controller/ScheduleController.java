@@ -47,32 +47,14 @@ public class ScheduleController implements ControllerDocs {
         return new ResponseEntity<>(scheduleService.findScheduleById(id), HttpStatus.OK);
     }
 
-//    //일정 전체 수정하기
-//    @PutMapping("/{id}")
-//    public ResponseEntity<ScheduleResponseDto> updateSchedule(
-//            @PathVariable Long id,
-//            @RequestBody ScheduleRequestDto dto
-//    ) {
-//        return new ResponseEntity<>(scheduleService.updateSchedule(id, dto),HttpStatus.OK);
-//    }
-//
-//    //일정 할일 수정하기
-//    @PatchMapping("/{id}")
-//    public ResponseEntity<ScheduleResponseDto> updateScheduleTodo(
-//            @PathVariable Long id,
-//            @RequestBody ScheduleRequestDto dto
-//    ) {
-//        return new ResponseEntity<>(scheduleService.updateScheduleTodo(id, dto),HttpStatus.OK);
-//    }
-//
-//    //일정 작성자명 수정하기
-//    @PatchMapping("/{id}")
-//    public ResponseEntity<ScheduleResponseDto> updateScheduleAuthor(
-//            @PathVariable Long id,
-//            @RequestBody ScheduleRequestDto dto
-//    ) {
-//        return new ResponseEntity<>(scheduleService.updateScheduleAuthor(id, dto),HttpStatus.OK);
-//    }
+    //일정 수정하기
+    @PatchMapping("/{id}")
+    public ResponseEntity<ScheduleResponseDto> updateSchedule(
+            @PathVariable Long id,
+            @RequestBody ScheduleRequestDto dto
+    ) {
+        return new ResponseEntity<>(scheduleService.updateSchedule(id, dto),HttpStatus.OK);
+    }
 
     //일정 삭제하기
     @DeleteMapping("/{id}")

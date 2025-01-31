@@ -67,12 +67,12 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
             return jdbcTemplate.query(sql, scheduleRowMapper());
         }
         //날짜만 입력된 경우
-        if(!StringUtils.hasText (author)) {
+        if(!StringUtils.hasText(author)) {
             sql += " where date_format(update_date, '%Y-%m-%d')  = ? order by update_date desc";
             return jdbcTemplate.query(sql, scheduleRowMapper(), update);
         }
         //작성자명만 입력된 경우
-        if(!StringUtils.hasText (update)) {
+        if(!StringUtils.hasText(update)) {
             sql += " where author = ? order by update_date desc";
             return jdbcTemplate.query(sql, scheduleRowMapper(), author);
         }
@@ -89,29 +89,27 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         return result.stream().findAny().orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist id= " + id));
     }
 
-    //일정 수정하기(할일만 수정)
+    //일정 수정하기
     @Override
-    public int updateScheduleTodo(Long id, String todo, String password) {
-
+    public int updateSchedule(Long id, String password, String author, String todo) {
         //수정일 변경
         LocalDateTime update = LocalDateTime.now();
-        return jdbcTemplate.update("update schedule set todo = ?, update_date = ? where id = ? and password = ? ", todo,update, id, password);
-    }
+        String sql = "update schedule";
 
-    //일정 수정하기(작성자명만 수정)
-    @Override
-    public int updateScheduleAuthor(Long id, String author, String password) {
-        //수정일 변경
-        LocalDateTime update = LocalDateTime.now();
-        return jdbcTemplate.update("update schedule set author = ? , update_date = ? where id = ? and password = ? ", author,update, id, password);
-    }
+        //할일만 입력된 경우
+        if(!StringUtils.hasText(author)) {
+            sql += " set todo = ?, update_date = ? where id = ? and password = ?";
+            return jdbcTemplate.update(sql, todo, update, id, password);
+        }
+        //작성자명만 입력된 경우
+        if(!StringUtils.hasText (todo)) {
+            sql += " set author = ?, update_date = ? where id = ? and password = ?";
+            return jdbcTemplate.update(sql, author, update, id, password);
+        }
 
-    //일정 수정하기(전체 수정)
-    @Override
-    public int updateSchedule(Long id, String todo, String author, String password) {
-        //수정일 변경
-        LocalDateTime update = LocalDateTime.now();
-        return jdbcTemplate.update("update schedule set author = ?, todo = ? , update_date = ? where id = ? and password = ? ", author, todo,update, id, password);
+        sql += " set author = ?, todo = ? , update_date = ? where id = ? and password = ?";
+        return jdbcTemplate.update(sql, author, todo,update, id, password);
+
     }
 
     //일정 삭제하기
