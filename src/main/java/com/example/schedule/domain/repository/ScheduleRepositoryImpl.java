@@ -1,13 +1,14 @@
-package com.example.schedule.repository;
+package com.example.schedule.domain.repository;
 
-import com.example.schedule.dto.ScheduleResponseDto;
-import com.example.schedule.entity.Schedule;
+import com.example.schedule.application.dto.ScheduleResponseDto;
+import com.example.schedule.domain.entity.Schedule;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.sql.DataSource;
@@ -55,28 +56,30 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         return new ScheduleResponseDto(id.longValue(), schedule.getAuthor(), schedule.getTodo(), createTimeFormat, createTimeFormat);
     }
 
-    //일정 전체 조회 (입력이 없는 경우)
+    //일정 전체 조회
     @Override
-    public List<ScheduleResponseDto> findAllSchedule() {
-        return jdbcTemplate.query("select * from schedule order by update_date desc", scheduleRowMapper());
-    }
+    public List<ScheduleResponseDto> findAllSchedules(String author, String update) {
+        //기본 베이스 쿼리
+        String sql = "select * from schedule";
 
-    //일정 전체 조회 (날짜만 입력한 경우)
-    @Override
-    public List<ScheduleResponseDto> findAllScheduleByUpdate(String update) {
-        return jdbcTemplate.query("select * from schedule where  date_format(update_date, '%Y-%m-%d') = ? order by update_date desc", scheduleRowMapper(), update);
-    }
+        //입력이 아무것도 없는 경우
+        if (!StringUtils.hasText (author) && !StringUtils.hasText (update)) {
+            return jdbcTemplate.query(sql, scheduleRowMapper());
+        }
+        //날짜만 입력된 경우
+        if(!StringUtils.hasText (author)) {
+            sql += " where date_format(update_date, '%Y-%m-%d')  = ? order by update_date desc";
+            return jdbcTemplate.query(sql, scheduleRowMapper(), update);
+        }
+        //작성자명만 입력된 경우
+        if(!StringUtils.hasText (update)) {
+            sql += " where author = ? order by update_date desc";
+            return jdbcTemplate.query(sql, scheduleRowMapper(), author);
+        }
 
-    //일정 전체 조회 (작성자만 입력한 경우)
-    @Override
-    public List<ScheduleResponseDto> findAllScheduleByAuthor(String author) {
-        return jdbcTemplate.query("select * from schedule where  author = ? order by update_date desc", scheduleRowMapper(), author);
-    }
-
-    //일정 전체 조회 (모두 입력한 경우)
-    @Override
-    public List<ScheduleResponseDto> findAllSchedule(String author, String update) {
-        return jdbcTemplate.query("select * from schedule where author = ? and date_format(update_date, '%Y-%m-%d') = ? order by update_date desc", scheduleRowMapper(), author, update);
+        //둘 다 입력한 경우
+        sql += " where author = ? or date_format(update_date, '%Y-%m-%d')  = ? order by update_date desc";
+        return jdbcTemplate.query(sql, scheduleRowMapper(),author, update);
     }
 
     //일정 단건 조회

@@ -1,4 +1,4 @@
-package com.example.schedule.entity;
+package com.example.schedule.domain.entity;
 
 public class User {
 

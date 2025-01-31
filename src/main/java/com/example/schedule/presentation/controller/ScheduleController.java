@@ -1,10 +1,9 @@
-package com.example.schedule.controller;
+package com.example.schedule.presentation.controller;
 
 import com.example.schedule.docs.ControllerDocs;
-import com.example.schedule.dto.ScheduleRequestDto;
-import com.example.schedule.dto.ScheduleResponseDto;
-import com.example.schedule.entity.Schedule;
-import com.example.schedule.service.ScheduleService;
+import com.example.schedule.application.dto.ScheduleRequestDto;
+import com.example.schedule.application.dto.ScheduleResponseDto;
+import com.example.schedule.application.service.ScheduleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +38,7 @@ public class ScheduleController implements ControllerDocs {
             @RequestParam(required = false) String author,
             @RequestParam(required = false) String update
     ) {
-       return new ResponseEntity<>(scheduleService.findAllSchedule(author, update), HttpStatus.OK);
+       return new ResponseEntity<>(scheduleService.findAllSchedules(author, update), HttpStatus.OK);
     }
 
     //일정 단건 조회하기
@@ -48,14 +47,32 @@ public class ScheduleController implements ControllerDocs {
         return new ResponseEntity<>(scheduleService.findScheduleById(id), HttpStatus.OK);
     }
 
-    //일정 수정하기
-    @PatchMapping("/{id}")
-    public ResponseEntity<ScheduleResponseDto> updateSchedule(
-            @PathVariable Long id,
-            @RequestBody ScheduleRequestDto dto
-    ) {
-        return new ResponseEntity<>(scheduleService.updateSchedule(id, dto),HttpStatus.OK);
-    }
+//    //일정 전체 수정하기
+//    @PutMapping("/{id}")
+//    public ResponseEntity<ScheduleResponseDto> updateSchedule(
+//            @PathVariable Long id,
+//            @RequestBody ScheduleRequestDto dto
+//    ) {
+//        return new ResponseEntity<>(scheduleService.updateSchedule(id, dto),HttpStatus.OK);
+//    }
+//
+//    //일정 할일 수정하기
+//    @PatchMapping("/{id}")
+//    public ResponseEntity<ScheduleResponseDto> updateScheduleTodo(
+//            @PathVariable Long id,
+//            @RequestBody ScheduleRequestDto dto
+//    ) {
+//        return new ResponseEntity<>(scheduleService.updateScheduleTodo(id, dto),HttpStatus.OK);
+//    }
+//
+//    //일정 작성자명 수정하기
+//    @PatchMapping("/{id}")
+//    public ResponseEntity<ScheduleResponseDto> updateScheduleAuthor(
+//            @PathVariable Long id,
+//            @RequestBody ScheduleRequestDto dto
+//    ) {
+//        return new ResponseEntity<>(scheduleService.updateScheduleAuthor(id, dto),HttpStatus.OK);
+//    }
 
     //일정 삭제하기
     @DeleteMapping("/{id}")

@@ -1,4 +1,4 @@
-package com.example.schedule.entity;
+package com.example.schedule.domain.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,7 +28,7 @@ public class Schedule {
         this.author = author;
         this.password = password;
         this.todo = todo;
-        this.createAt = LocalDateTime.now(); //객체 생성 시 현재 시간
+        this.createAt = LocalDateTime.now();//객체 생성 시 현재 시간
         this.updateAt = LocalDateTime.now();
     }
 

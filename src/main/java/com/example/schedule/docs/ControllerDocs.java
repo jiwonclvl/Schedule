@@ -1,8 +1,8 @@
 package com.example.schedule.docs;
 
 
-import com.example.schedule.dto.ScheduleRequestDto;
-import com.example.schedule.dto.ScheduleResponseDto;
+import com.example.schedule.application.dto.ScheduleRequestDto;
+import com.example.schedule.application.dto.ScheduleResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 
