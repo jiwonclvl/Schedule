@@ -9,69 +9,70 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
-
-
 import java.util.List;
 
 @Service
 public class ScheduleServiceImpl implements ScheduleService {
 
-    //필드
     private final ScheduleRepository scheduleRepository;
 
-    //생성자
     public ScheduleServiceImpl(ScheduleRepository scheduleRepository) {
         this.scheduleRepository = scheduleRepository;
     }
 
-    //일정 생성하기
+    @Transactional
     @Override
-    public ScheduleResponseDto saveSchedule(ScheduleRequestDto dto) {
-        //전달 받은 데이터를 통해 일정 객체 생성
-        Schedule schedule = new Schedule(dto.getAuthor(), dto.getPassword(), dto.getTodo());
+    public ScheduleResponseDto createSchedule(ScheduleRequestDto dto) {
 
+        if (!StringUtils.hasText(dto.getAuthor()) || !StringUtils.hasText(dto.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "작성자명과 비밀번호는 반드시 입력되어야 합니다.");
+        }
+
+        Schedule schedule = new Schedule(dto.getAuthor(), dto.getPassword(), dto.getTodo());
         return scheduleRepository.saveSchedule(schedule);
     }
 
-    //일정 전체 조회하기
     @Override
-    public List<ScheduleResponseDto> findAllSchedules(String author, String update) {
+    public List<ScheduleResponseDto> getSchedules(String author, String update) {
 
-        return scheduleRepository.findAllSchedules(author, update);
+        return scheduleRepository.findSchedules(author, update);
     }
 
-    //일정 단건 조회하기
     @Override
-    public ScheduleResponseDto findScheduleById(Long id) {
-        return scheduleRepository.findScheduleById(id);
+    public ScheduleResponseDto getSchedule(Long id) {
+
+        return scheduleRepository.findSchedule(id);
     }
 
-    //일정 수정
     @Transactional
     @Override
     public ScheduleResponseDto updateSchedule(Long id, ScheduleRequestDto dto) {
 
-        //둘 다 입력하지 않은 경우
-        if (!StringUtils.hasText(dto.getTodo()) && !StringUtils.hasText(dto.getAuthor())) {
-           throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Missing required fields");
+        if (isEmpty(dto.getTodo(), dto.getAuthor())) {
+           throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "작성자명과 할 일 중 하나 이상을 입력해야 합니다.");
         }
 
         int update = scheduleRepository.updateSchedule(id, dto.getPassword(), dto.getAuthor(), dto.getTodo());
 
-        //쿼리를 0번 적용했다면 id가 없다는 의미
         if(update == 0){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist id = " + id);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "일정이 존재하지 않습니다.");
         }
 
-        return scheduleRepository.findScheduleById(id);
+        return scheduleRepository.findSchedule(id);
     }
 
-    //일정 삭제하기
+    @Transactional
     @Override
     public void deleteSchedule(Long id, String password) {
+
         int delete = scheduleRepository.deleteSchedule(id, password);
-        if(delete == 0){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist id = " + id);
+
+        if (delete == 0){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "일정이 존재하지 않습니다.");
         }
+    }
+
+    private boolean isEmpty(String value1, String value2) {
+        return !StringUtils.hasText(value1) && ! StringUtils.hasText(value2);
     }
 }
