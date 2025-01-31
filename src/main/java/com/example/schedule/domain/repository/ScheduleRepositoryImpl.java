@@ -78,6 +78,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     @Override
     public int updateSchedule(Long id, String password, String author, String todo) {
 
+        //TODO: 비밀번호 검증 따로 빼기
         LocalDateTime update = LocalDateTime.now();
         String sql = "update schedule";
 
@@ -98,6 +99,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     //일정 삭제하기
     @Override
     public int deleteSchedule(Long id, String password) {
+        //TODO: 비밀번호 검증 따로 빼기
         return jdbcTemplate.update("delete from schedule where id = ? and password = ?", id, password);
     }
 

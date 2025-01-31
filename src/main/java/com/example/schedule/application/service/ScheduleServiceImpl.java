@@ -35,12 +35,14 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public List<ScheduleResponseDto> getSchedules(String author, String update) {
 
+        //TODO: 예외처리 추가하기
         return scheduleRepository.findSchedules(author, update);
     }
 
     @Override
     public ScheduleResponseDto getSchedule(Long id) {
 
+        //TODO: 예외처리 추가하기
         return scheduleRepository.findSchedule(id);
     }
 
