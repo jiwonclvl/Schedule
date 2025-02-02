@@ -14,7 +14,7 @@ public interface ScheduleRepository {
     ScheduleResponseDto findScheduleByScheduleId(Long scheduleId);
 
     int updateSchedule(Long scheduleId,Long userId, String password, String todo);
-//
-//    int deleteSchedule(Long id, String password);
+
+    int deleteSchedule(Long scheduleId, Long userId, String password);
 
 }

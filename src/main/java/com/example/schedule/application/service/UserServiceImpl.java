@@ -31,6 +31,17 @@ public class UserServiceImpl implements UserService {
         return userRepository.saveUser(user);
     }
 
+    @Override
+    public UserResponseDto updateUser(Long userId, UserRequestDto dto) {
+        int update = userRepository.updateUser(userId, dto.getAuthor(), dto.getPassword());
+
+        if(update == 0){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "일정이 존재하지 않습니다.");
+        }
+
+        return userRepository.findUser(userId);
+    }
+
     private boolean isRequiredFieldEmpty(String value1, String value2) {
         return !StringUtils.hasText(value1) || !StringUtils.hasText(value2);
     }

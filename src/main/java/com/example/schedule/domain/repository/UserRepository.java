@@ -5,4 +5,9 @@ import com.example.schedule.domain.entity.User;
 
 public interface UserRepository {
     public UserResponseDto saveUser(User user);
+
+    public UserResponseDto findUser(Long userId);
+
+    public int updateUser(Long userId, String author, String password);
+
 }

@@ -53,16 +53,16 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleRepository.findScheduleByScheduleId(scheduleId);
     }
 
-//    @Transactional
-//    @Override
-//    public void deleteSchedule(Long id, String password) {
-//
-//        int delete = scheduleRepository.deleteSchedule(id, password);
-//
-//        if (delete == 0){
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "일정이 존재하지 않습니다.");
-//        }
-//    }
+    @Transactional
+    @Override
+    public void deleteSchedule(Long scheduleId, ScheduleRequestDto dto) {
+
+        int delete = scheduleRepository.deleteSchedule(scheduleId,dto.getUserId(), dto.getPassword());
+
+        if (delete == 0){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "일정이 존재하지 않습니다.");
+        }
+    }
 
     private boolean isEmpty(String value1, String value2) {
         return !StringUtils.hasText(value1) && ! StringUtils.hasText(value2);

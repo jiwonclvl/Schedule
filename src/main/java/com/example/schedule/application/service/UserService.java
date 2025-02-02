@@ -4,5 +4,8 @@ import com.example.schedule.application.dto.UserRequestDto;
 import com.example.schedule.application.dto.UserResponseDto;
 
 public interface UserService {
+
     public UserResponseDto createUser(UserRequestDto dto);
+
+    public UserResponseDto updateUser(Long userId, UserRequestDto dto);
 }

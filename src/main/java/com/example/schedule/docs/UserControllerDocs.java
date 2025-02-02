@@ -10,4 +10,9 @@ import org.springframework.web.bind.annotation.*;
 public interface UserControllerDocs {
 
     public ResponseEntity<UserResponseDto> createUser(@RequestBody UserRequestDto dto);
+
+    public ResponseEntity<UserResponseDto> updateUser(
+            @PathVariable Long userId,
+            @RequestBody UserRequestDto dto
+    );
 }

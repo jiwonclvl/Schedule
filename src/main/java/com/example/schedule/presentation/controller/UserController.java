@@ -24,5 +24,14 @@ public class UserController implements UserControllerDocs {
         return new ResponseEntity<>(userService.createUser(dto), HttpStatus.CREATED);
     }
 
+    @Override
+    @PatchMapping("/{userId}")
+    public ResponseEntity<UserResponseDto> updateUser(
+            @PathVariable Long userId,
+            @RequestBody UserRequestDto dto
+    ) {
+        return new ResponseEntity<>(userService.updateUser(userId, dto), HttpStatus.OK);
+    }
+
 
 }

@@ -109,12 +109,21 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         );
     }
 
-//    //일정 삭제하기
-//    @Override
-//    public int deleteSchedule(Long id, String password) {
-//        //TODO: 비밀번호 검증 따로 빼기
-//        return jdbcTemplate.update("delete from schedule where id = ? and password = ?", id, password);
-//    }
+    //일정 삭제하기
+    @Override
+    public int deleteSchedule(Long scheduleId, Long userId, String password) {
+
+        String storedPassword = jdbcTemplate.queryForObject(
+                "SELECT password FROM users WHERE user_id = ?", String.class, userId
+        );
+
+        //비밀번호 검증
+        if(!password.equals(storedPassword)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"비밀번호가 일치하지 않습니다.");
+        }
+
+        return jdbcTemplate.update("delete from schedules where schedule_id = ? and user_id= ?", scheduleId,userId);
+    }
 
     //날짜 출력 형식 변경
     private String localDateTimeFormat(LocalDateTime create) {
