@@ -86,28 +86,29 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         );
         return result.stream().findAny().orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "일정이 존재하지 않습니다."));
     }
-//
-//    @Override
-//    public int updateSchedule(Long id, String password, String author, String todo) {
-//
-//        //TODO: 비밀번호 검증 따로 빼기
-//        LocalDateTime update = LocalDateTime.now();
-//        String sql = "update schedule";
-//
-//        if(!StringUtils.hasText(author)) {
-//            sql += " set todo = ?, update_date = ? where id = ? and password = ?";
-//            return jdbcTemplate.update(sql, todo, update, id, password);
-//        }
-//        if(!StringUtils.hasText (todo)) {
-//            sql += " set author = ?, update_date = ? where id = ? and password = ?";
-//            return jdbcTemplate.update(sql, author, update, id, password);
-//        }
-//
-//        sql += " set author = ?, todo = ? , update_date = ? where id = ? and password = ?";
-//        return jdbcTemplate.update(sql, author, todo,update, id, password);
-//
-//    }
-//
+
+    @Override
+    public int updateSchedule(Long scheduleId, Long userId, String password, String todo) {
+
+        LocalDateTime update = LocalDateTime.now();
+        String storedPassword = jdbcTemplate.queryForObject(
+                "SELECT password FROM users WHERE user_id = ?", String.class, userId
+        );
+
+        System.out.println("Password = " + password);
+        System.out.println("storedPassword = " + storedPassword);
+
+        //비밀번호 검증
+        if(!password.equals(storedPassword)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"비밀번호가 일치하지 않습니다.");
+        }
+
+        //할일 수정하기
+        return jdbcTemplate.update(
+                "update schedules set todo = ?, update_date = ? where schedule_id = ?", todo, update, scheduleId
+        );
+    }
+
 //    //일정 삭제하기
 //    @Override
 //    public int deleteSchedule(Long id, String password) {

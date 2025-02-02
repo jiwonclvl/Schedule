@@ -40,22 +40,18 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleRepository.findScheduleByScheduleId(scheduleId);
     }
 
-//    @Transactional
-//    @Override
-//    public ScheduleResponseDto updateSchedule(Long id, ScheduleRequestDto dto) {
-//
-//        if (isEmpty(dto.getTodo(), dto.getAuthor())) {
-//           throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "작성자명과 할 일 중 하나 이상을 입력해야 합니다.");
-//        }
-//
-//        int update = scheduleRepository.updateSchedule(id, dto.getPassword(), dto.getAuthor(), dto.getTodo());
-//
-//        if(update == 0){
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "일정이 존재하지 않습니다.");
-//        }
-//
-//        return scheduleRepository.findSchedule(id);
-//    }
+    @Transactional
+    @Override
+    public ScheduleResponseDto updateSchedule(Long scheduleId, ScheduleRequestDto dto) {
+
+        int update = scheduleRepository.updateSchedule(scheduleId, dto.getUserId(), dto.getPassword(), dto.getTodo());
+
+        if(update == 0){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "일정이 존재하지 않습니다.");
+        }
+
+        return scheduleRepository.findScheduleByScheduleId(scheduleId);
+    }
 
 //    @Transactional
 //    @Override

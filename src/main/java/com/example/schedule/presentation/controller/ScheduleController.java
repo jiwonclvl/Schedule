@@ -45,15 +45,15 @@ public class ScheduleController implements ScheduleControllerDocs {
 
         return new ResponseEntity<>(scheduleService.getSchedule(scheduleId), HttpStatus.OK);
     }
-//
-//    @PatchMapping("/{id}")
-//    public ResponseEntity<ScheduleResponseDto> updateSchedule(
-//            @PathVariable Long id,
-//            @RequestBody ScheduleRequestDto dto
-//    ) {
-//
-//        return new ResponseEntity<>(scheduleService.updateSchedule(id, dto),HttpStatus.OK);
-//    }
+
+    @PatchMapping("/{scheduleId}")
+    public ResponseEntity<ScheduleResponseDto> updateSchedule(
+            @PathVariable Long scheduleId,
+            @RequestBody ScheduleRequestDto dto
+    ) {
+
+        return new ResponseEntity<>(scheduleService.updateSchedule(scheduleId, dto),HttpStatus.OK);
+    }
 //
 //    @DeleteMapping("/{id}")
 //    public ResponseEntity<Void> deleteSchedule(
