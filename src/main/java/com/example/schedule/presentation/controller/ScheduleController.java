@@ -20,44 +20,46 @@ public class ScheduleController implements ScheduleControllerDocs {
     }
 
     @Override
-    @PostMapping
-    public ResponseEntity<ScheduleResponseDto> createSchedule(@RequestBody ScheduleRequestDto dto) {
+    @PostMapping("/{userId}")
+    public ResponseEntity<ScheduleResponseDto> createSchedule(
+            @PathVariable Long userId,
+            @RequestBody ScheduleRequestDto dto) {
 
-       return new ResponseEntity<>(scheduleService.createSchedule(dto),HttpStatus.CREATED);
+       return new ResponseEntity<>(scheduleService.createSchedule(userId, dto),HttpStatus.CREATED);
     }
-
-    @Override
-    @GetMapping
-    public ResponseEntity<List<ScheduleResponseDto>> getSchedules(
-            @RequestParam(required = false) String author,
-            @RequestParam(required = false) String update
-    ) {
-
-       return new ResponseEntity<>(scheduleService.getSchedules(author, update), HttpStatus.OK);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<ScheduleResponseDto> getSchedule(@PathVariable Long id) {
-
-        return new ResponseEntity<>(scheduleService.getSchedule(id), HttpStatus.OK);
-    }
-
-    @PatchMapping("/{id}")
-    public ResponseEntity<ScheduleResponseDto> updateSchedule(
-            @PathVariable Long id,
-            @RequestBody ScheduleRequestDto dto
-    ) {
-
-        return new ResponseEntity<>(scheduleService.updateSchedule(id, dto),HttpStatus.OK);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSchedule(
-            @PathVariable Long id,
-            @RequestBody String password
-    ) {
-
-        scheduleService.deleteSchedule(id, password);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+//
+//    @Override
+//    @GetMapping
+//    public ResponseEntity<List<ScheduleResponseDto>> getSchedules(
+//            @RequestParam(required = false) String author,
+//            @RequestParam(required = false) String update
+//    ) {
+//
+//       return new ResponseEntity<>(scheduleService.getSchedules(author, update), HttpStatus.OK);
+//    }
+//
+//    @GetMapping("/{id}")
+//    public ResponseEntity<ScheduleResponseDto> getSchedule(@PathVariable Long id) {
+//
+//        return new ResponseEntity<>(scheduleService.getSchedule(id), HttpStatus.OK);
+//    }
+//
+//    @PatchMapping("/{id}")
+//    public ResponseEntity<ScheduleResponseDto> updateSchedule(
+//            @PathVariable Long id,
+//            @RequestBody ScheduleRequestDto dto
+//    ) {
+//
+//        return new ResponseEntity<>(scheduleService.updateSchedule(id, dto),HttpStatus.OK);
+//    }
+//
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<Void> deleteSchedule(
+//            @PathVariable Long id,
+//            @RequestBody String password
+//    ) {
+//
+//        scheduleService.deleteSchedule(id, password);
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
 }

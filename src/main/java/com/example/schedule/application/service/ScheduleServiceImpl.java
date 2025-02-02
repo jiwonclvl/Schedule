@@ -22,57 +22,53 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Transactional
     @Override
-    public ScheduleResponseDto createSchedule(ScheduleRequestDto dto) {
+    public ScheduleResponseDto createSchedule(Long userId, ScheduleRequestDto dto) {
 
-        if (!StringUtils.hasText(dto.getAuthor()) || !StringUtils.hasText(dto.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "작성자명과 비밀번호는 반드시 입력되어야 합니다.");
-        }
-
-        Schedule schedule = new Schedule(dto.getAuthor(), dto.getPassword(), dto.getTodo());
-        return scheduleRepository.saveSchedule(schedule);
+        Schedule schedule = new Schedule(dto.getTodo());
+        return scheduleRepository.saveSchedule(userId, schedule);
     }
 
-    @Override
-    public List<ScheduleResponseDto> getSchedules(String author, String update) {
+//    @Override
+//    public List<ScheduleResponseDto> getSchedules(String author, String update) {
+//
+//        //TODO: 예외처리 추가하기
+//        return scheduleRepository.findSchedules(author, update);
+//    }
+//
+//    @Override
+//    public ScheduleResponseDto getSchedule(Long id) {
+//
+//        //TODO: 예외처리 추가하기
+//        return scheduleRepository.findSchedule(id);
+//    }
 
-        //TODO: 예외처리 추가하기
-        return scheduleRepository.findSchedules(author, update);
-    }
+//    @Transactional
+//    @Override
+//    public ScheduleResponseDto updateSchedule(Long id, ScheduleRequestDto dto) {
+//
+//        if (isEmpty(dto.getTodo(), dto.getAuthor())) {
+//           throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "작성자명과 할 일 중 하나 이상을 입력해야 합니다.");
+//        }
+//
+//        int update = scheduleRepository.updateSchedule(id, dto.getPassword(), dto.getAuthor(), dto.getTodo());
+//
+//        if(update == 0){
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "일정이 존재하지 않습니다.");
+//        }
+//
+//        return scheduleRepository.findSchedule(id);
+//    }
 
-    @Override
-    public ScheduleResponseDto getSchedule(Long id) {
-
-        //TODO: 예외처리 추가하기
-        return scheduleRepository.findSchedule(id);
-    }
-
-    @Transactional
-    @Override
-    public ScheduleResponseDto updateSchedule(Long id, ScheduleRequestDto dto) {
-
-        if (isEmpty(dto.getTodo(), dto.getAuthor())) {
-           throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "작성자명과 할 일 중 하나 이상을 입력해야 합니다.");
-        }
-
-        int update = scheduleRepository.updateSchedule(id, dto.getPassword(), dto.getAuthor(), dto.getTodo());
-
-        if(update == 0){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "일정이 존재하지 않습니다.");
-        }
-
-        return scheduleRepository.findSchedule(id);
-    }
-
-    @Transactional
-    @Override
-    public void deleteSchedule(Long id, String password) {
-
-        int delete = scheduleRepository.deleteSchedule(id, password);
-
-        if (delete == 0){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "일정이 존재하지 않습니다.");
-        }
-    }
+//    @Transactional
+//    @Override
+//    public void deleteSchedule(Long id, String password) {
+//
+//        int delete = scheduleRepository.deleteSchedule(id, password);
+//
+//        if (delete == 0){
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "일정이 존재하지 않습니다.");
+//        }
+//    }
 
     private boolean isEmpty(String value1, String value2) {
         return !StringUtils.hasText(value1) && ! StringUtils.hasText(value2);

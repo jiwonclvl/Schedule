@@ -7,28 +7,21 @@ import java.time.LocalDateTime;
 @Getter
 public class ScheduleResponseDto {
 
-    //아이디
-    private final Long id;
+    private  Long scheduleId;
 
-    //할일
-    private final String todo;
+    private  Long userId;
 
-    //작성자명
-    private final String author;
+    private  String todo;
 
-    // 작성일
-    private final LocalDateTime createAt;
+    private  String createAt;
 
-    // 수정일
-    private final LocalDateTime updateAt;
+    private  String updateAt;
 
-    public ScheduleResponseDto(Long id, String author, String todo, LocalDateTime creatAt, LocalDateTime updateAt) {
-        this.id = id;
-        this.author = author;
+    public ScheduleResponseDto(Long scheduleId, Long userId, String todo, String creatAt, String updateAt) {
+        this.scheduleId = scheduleId;
+        this.userId = userId;
         this.todo = todo;
         this.createAt = creatAt;
         this.updateAt = updateAt;
     }
-
-
 }

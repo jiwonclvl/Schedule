@@ -9,19 +9,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Schedule {
 
-    private String author;
-
-    private String password;
-
     private String todo;
 
     private LocalDateTime createAt;
 
     private LocalDateTime updateAt;
 
-    public Schedule(String author, String password, String todo) {
-        this.author = author;
-        this.password = password;
+    public Schedule(String todo) {
         this.todo = todo;
         this.createAt = LocalDateTime.now();//객체 생성 시 현재 시간
         this.updateAt = LocalDateTime.now();

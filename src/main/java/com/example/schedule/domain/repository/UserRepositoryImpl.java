@@ -28,7 +28,7 @@ public class UserRepositoryImpl implements UserRepository {
         SimpleJdbcInsert insert = new SimpleJdbcInsert(this.jdbcTemplate);
         insert.withTableName("users").usingGeneratedKeyColumns("user_id");
 
-        //사용자에게 보여줄 날짜 출력 형식 변경 (YYYY-MM-DD로 변경)
+        //사용자에게 응답 데이터 날짜 출력 형식 변경 (YYYY-MM-DD로 변경)
         String createTimeFormat = localDateTimeFormat(user.getCreateAt());
 
         Map<String, Object> parameters = new HashMap<>();
