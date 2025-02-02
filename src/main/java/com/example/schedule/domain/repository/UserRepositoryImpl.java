@@ -35,8 +35,8 @@ public class UserRepositoryImpl implements UserRepository {
         parameters.put("author", user.getAuthor());
         parameters.put("password", user.getPassword());
         parameters.put("email", user.getEmail());
-        parameters.put("create_date", user.getEmail());
-        parameters.put("update_date", user.getEmail());
+        parameters.put("create_date", user.getCreateAt());
+        parameters.put("update_date", user.getCreateAt());
 
         Number id = insert.executeAndReturnKey(new MapSqlParameterSource(parameters));
         return new UserResponseDto(id.longValue(), user.getAuthor(),createTimeFormat,createTimeFormat);
