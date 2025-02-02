@@ -22,25 +22,23 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Transactional
     @Override
-    public ScheduleResponseDto createSchedule(Long userId, ScheduleRequestDto dto) {
+    public ScheduleResponseDto createSchedule(ScheduleRequestDto dto) {
 
-        Schedule schedule = new Schedule(dto.getTodo());
-        return scheduleRepository.saveSchedule(userId, schedule);
+        Schedule schedule = new Schedule(dto.getUserId(), dto.getTodo());
+        return scheduleRepository.saveSchedule(schedule);
     }
 
     @Override
     public List<ScheduleResponseDto> getSchedules(Long userId, String startDate, String endDate) {
 
-        return scheduleRepository.findSchedulesById(userId, startDate, endDate);
+        return scheduleRepository.findSchedulesByUserId(userId, startDate, endDate);
     }
 
-//
-//    @Override
-//    public ScheduleResponseDto getSchedule(Long id) {
-//
-//        //TODO: 예외처리 추가하기
-//        return scheduleRepository.findSchedule(id);
-//    }
+    @Override
+    public ScheduleResponseDto getSchedule(Long scheduleId) {
+
+        return scheduleRepository.findScheduleByScheduleId(scheduleId);
+    }
 
 //    @Transactional
 //    @Override

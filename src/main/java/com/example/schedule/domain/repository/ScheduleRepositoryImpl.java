@@ -29,7 +29,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     }
 
     @Override
-    public ScheduleResponseDto saveSchedule(Long userId, Schedule schedule) {
+    public ScheduleResponseDto saveSchedule(Schedule schedule) {
 
         SimpleJdbcInsert insert = new SimpleJdbcInsert(this.jdbcTemplate);
 
@@ -39,17 +39,17 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
          String createTimeFormat = localDateTimeFormat(schedule.getCreateAt());
 
         Map<String, Object> params = new HashMap<>();
-        params.put("user_id", userId);
+        params.put("user_id", schedule.getUserId());
         params.put("todo", schedule.getTodo());
         params.put("create_date", schedule.getCreateAt());
         params.put("update_date", schedule.getUpdateAt());
 
         Number id = insert.executeAndReturnKey(new MapSqlParameterSource(params));
-        return new ScheduleResponseDto(id.longValue(), userId, schedule.getTodo(), createTimeFormat, createTimeFormat);
+        return new ScheduleResponseDto(id.longValue(), schedule.getUserId(), schedule.getTodo(), createTimeFormat, createTimeFormat);
     }
 
     @Override
-    public List<ScheduleResponseDto> findSchedulesById(Long userId, String startDate, String endDate) {
+    public List<ScheduleResponseDto> findSchedulesByUserId(Long userId, String startDate, String endDate) {
 
         String sql = "select * from schedules where user_id = ?";
         List<ScheduleResponseDto> result = jdbcTemplate.query(sql, scheduleRowMapper(), userId);
@@ -79,11 +79,13 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         return jdbcTemplate.query(sql, scheduleRowMapper(),userId, startDate, endDate);
     }
 
-//    @Override
-//    public ScheduleResponseDto findSchedule(Long id) {
-//        List<ScheduleResponseDto> result = jdbcTemplate.query("select * from schedule where id = ?", scheduleRowMapper(), id);
-//        return result.stream().findAny().orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "일정이 존재하지 않습니다."));
-//    }
+    @Override
+    public ScheduleResponseDto findScheduleByScheduleId(Long scheduleId) {
+        List<ScheduleResponseDto> result = jdbcTemplate.query(
+                "select * from schedules where schedule_id = ?", scheduleRowMapper(), scheduleId
+        );
+        return result.stream().findAny().orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "일정이 존재하지 않습니다."));
+    }
 //
 //    @Override
 //    public int updateSchedule(Long id, String password, String author, String todo) {

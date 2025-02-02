@@ -20,16 +20,15 @@ public class ScheduleController implements ScheduleControllerDocs {
     }
 
     @Override
-    @PostMapping("/{userId}")
+    @PostMapping()
     public ResponseEntity<ScheduleResponseDto> createSchedule(
-            @PathVariable Long userId,
             @RequestBody ScheduleRequestDto dto) {
 
-       return new ResponseEntity<>(scheduleService.createSchedule(userId, dto),HttpStatus.CREATED);
+       return new ResponseEntity<>(scheduleService.createSchedule(dto),HttpStatus.CREATED);
     }
 
     @Override
-    @GetMapping("/{userId}")
+    @GetMapping("/users/{userId}")
     public ResponseEntity<List<ScheduleResponseDto>> getSchedules(
             @PathVariable Long userId,
             @RequestParam(required = false) String startDate,
@@ -39,11 +38,13 @@ public class ScheduleController implements ScheduleControllerDocs {
        return new ResponseEntity<>(scheduleService.getSchedules(userId, startDate, endDate), HttpStatus.OK);
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<ScheduleResponseDto> getSchedule(@PathVariable Long id) {
-//
-//        return new ResponseEntity<>(scheduleService.getSchedule(id), HttpStatus.OK);
-//    }
+    @Override
+    @GetMapping("/{scheduleId}")
+    public ResponseEntity<ScheduleResponseDto> getSchedule(@PathVariable Long scheduleId
+    ) {
+
+        return new ResponseEntity<>(scheduleService.getSchedule(scheduleId), HttpStatus.OK);
+    }
 //
 //    @PatchMapping("/{id}")
 //    public ResponseEntity<ScheduleResponseDto> updateSchedule(

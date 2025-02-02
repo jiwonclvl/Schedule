@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface ScheduleService {
 
-    ScheduleResponseDto createSchedule(Long userId, ScheduleRequestDto dto);
+    ScheduleResponseDto createSchedule(ScheduleRequestDto dto);
 
     List<ScheduleResponseDto> getSchedules(Long userId, String startDate, String endDate);
-//
-//    ScheduleResponseDto getSchedule(Long id);
+
+    ScheduleResponseDto getSchedule(Long scheduleId);
 
 //    ScheduleResponseDto updateSchedule(Long id, ScheduleRequestDto dto);
 

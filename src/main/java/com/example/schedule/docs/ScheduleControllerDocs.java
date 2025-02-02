@@ -23,24 +23,23 @@ public interface ScheduleControllerDocs {
             @ApiResponse(responseCode = "200", description = "일정 저장 성공"),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 작성자이기 때문에 저장 실패") })
     public ResponseEntity<ScheduleResponseDto> createSchedule(
-            @PathVariable Long userId,
             @RequestBody ScheduleRequestDto dto);
 
     @Operation(summary = "일정 전체 조회", description = "날짜 조건에 따른 전체 일정을 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "일정 전체 조회 성공"),
-            @ApiResponse(responseCode = "404", description = "존재하지 않는 작성자이기 때문에 일정 전체 조회 실패") })
+            @ApiResponse(responseCode = "404", description = "일정이 존재하지 않아 조회 실패") })
     public ResponseEntity<List<ScheduleResponseDto>> getSchedules(
             @PathVariable Long userId,
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate
     );
-//
-//    @Operation(summary = "일정 단건 조회", description = "고유 식별자 id를 통해 하나의 일정을 조회합니다.")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "일정 단건 조회 성공"),
-//            @ApiResponse(responseCode = "400", description = "일정 단건 조회 실패") })
-//    public ResponseEntity<ScheduleResponseDto> getSchedule(@PathVariable Long id);
+
+    @Operation(summary = "일정 단건 조회", description = "고유 식별자 id를 통해 하나의 일정을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "일정 단건 조회 성공"),
+            @ApiResponse(responseCode = "400", description = "일정 단건 조회 실패") })
+    public ResponseEntity<ScheduleResponseDto> getSchedule(@PathVariable Long userId);
 //
 //    @Operation(summary = "일정 수정", description = "작성자명, 할일만 수정 가능하며, 사용자가 올바른 비밀번호를 입력했을 때만 일정을 수정합니다.")
 //    @ApiResponses(value = {
