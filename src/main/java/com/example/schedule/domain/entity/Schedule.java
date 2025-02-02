@@ -9,19 +9,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Schedule {
 
-    //작성자명
     private String author;
 
-    //비밀번호
     private String password;
 
-    //할일
     private String todo;
 
-    //작성일
     private LocalDateTime createAt;
 
-    //수정일
     private LocalDateTime updateAt;
 
     public Schedule(String author, String password, String todo) {

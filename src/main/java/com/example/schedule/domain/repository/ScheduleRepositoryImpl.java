@@ -32,7 +32,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 
         SimpleJdbcInsert insert = new SimpleJdbcInsert(this.jdbcTemplate);
 
-        insert.withTableName("schedule").usingGeneratedKeyColumns("id");
+        insert.withTableName("schedules").usingGeneratedKeyColumns("id");
 
         //사용자에게 보여줄 날짜 출력 형식 변경 (YYYY-MM-DD로 변경)
         // String createTimeFormat = localDateTimeFormat(schedule.getCreateAt());
