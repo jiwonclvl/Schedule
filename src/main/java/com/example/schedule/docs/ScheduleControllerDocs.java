@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @Tag(name = "일정 관리", description = "일정 관리 API입니다.")
-public interface ControllerDocs {
+public interface ScheduleControllerDocs {
 
     @Operation(summary = "일정 정보 저장", description = "할일, 작성자명, 비밀번호를 입력하여 일정을 저장합니다.")
     @ApiResponses(value = {

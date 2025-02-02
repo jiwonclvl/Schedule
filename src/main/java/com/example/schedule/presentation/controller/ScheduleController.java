@@ -1,6 +1,6 @@
 package com.example.schedule.presentation.controller;
 
-import com.example.schedule.docs.ControllerDocs;
+import com.example.schedule.docs.ScheduleControllerDocs;
 import com.example.schedule.application.dto.ScheduleRequestDto;
 import com.example.schedule.application.dto.ScheduleResponseDto;
 import com.example.schedule.application.service.ScheduleService;
@@ -11,7 +11,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/schedules")
-public class ScheduleController implements ControllerDocs {
+public class ScheduleController implements ScheduleControllerDocs {
 
     private final ScheduleService scheduleService;
 
