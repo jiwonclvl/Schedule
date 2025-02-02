@@ -27,17 +27,18 @@ public class ScheduleController implements ScheduleControllerDocs {
 
        return new ResponseEntity<>(scheduleService.createSchedule(userId, dto),HttpStatus.CREATED);
     }
-//
-//    @Override
-//    @GetMapping
-//    public ResponseEntity<List<ScheduleResponseDto>> getSchedules(
-//            @RequestParam(required = false) String author,
-//            @RequestParam(required = false) String update
-//    ) {
-//
-//       return new ResponseEntity<>(scheduleService.getSchedules(author, update), HttpStatus.OK);
-//    }
-//
+
+    @Override
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<ScheduleResponseDto>> getSchedules(
+            @PathVariable Long userId,
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate
+    ) {
+
+       return new ResponseEntity<>(scheduleService.getSchedules(userId, startDate, endDate), HttpStatus.OK);
+    }
+
 //    @GetMapping("/{id}")
 //    public ResponseEntity<ScheduleResponseDto> getSchedule(@PathVariable Long id) {
 //

@@ -18,22 +18,23 @@ import java.util.List;
 @Tag(name = "일정 관리", description = "일정 관리 API입니다.")
 public interface ScheduleControllerDocs {
 
-    @Operation(summary = "일정 정보 저장", description = "할일, 작성자명, 비밀번호를 입력하여 일정을 저장합니다.")
+    @Operation(summary = "일정 정보 저장", description = "할일 입력하여 일정을 저장합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "일정 저장 성공"),
-            @ApiResponse(responseCode = "404", description = "작성자명 및 비밀번호 미입력으로 저장 실패") })
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 작성자이기 때문에 저장 실패") })
     public ResponseEntity<ScheduleResponseDto> createSchedule(
             @PathVariable Long userId,
             @RequestBody ScheduleRequestDto dto);
 
-//    @Operation(summary = "일정 전체 조회", description = "작성자명, 날짜 조건에 따른 전체 일정을 조회합니다.")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "일정 전체 조회 성공"),
-//            @ApiResponse(responseCode = "400", description = "일정 전체 조회 실패") })
-//    public ResponseEntity<List<ScheduleResponseDto>> getSchedules(
-//            @RequestParam(required = false) String author,
-//            @RequestParam(required = false) String update
-//    );
+    @Operation(summary = "일정 전체 조회", description = "날짜 조건에 따른 전체 일정을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "일정 전체 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 작성자이기 때문에 일정 전체 조회 실패") })
+    public ResponseEntity<List<ScheduleResponseDto>> getSchedules(
+            @PathVariable Long userId,
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate
+    );
 //
 //    @Operation(summary = "일정 단건 조회", description = "고유 식별자 id를 통해 하나의 일정을 조회합니다.")
 //    @ApiResponses(value = {

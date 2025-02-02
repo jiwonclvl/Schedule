@@ -9,7 +9,7 @@ public interface ScheduleService {
 
     ScheduleResponseDto createSchedule(Long userId, ScheduleRequestDto dto);
 
-//    List<ScheduleResponseDto> getSchedules(String author, String update);
+    List<ScheduleResponseDto> getSchedules(Long userId, String startDate, String endDate);
 //
 //    ScheduleResponseDto getSchedule(Long id);
 

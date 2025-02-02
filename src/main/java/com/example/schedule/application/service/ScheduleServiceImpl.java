@@ -28,12 +28,12 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleRepository.saveSchedule(userId, schedule);
     }
 
-//    @Override
-//    public List<ScheduleResponseDto> getSchedules(String author, String update) {
-//
-//        //TODO: 예외처리 추가하기
-//        return scheduleRepository.findSchedules(author, update);
-//    }
+    @Override
+    public List<ScheduleResponseDto> getSchedules(Long userId, String startDate, String endDate) {
+
+        return scheduleRepository.findSchedulesById(userId, startDate, endDate);
+    }
+
 //
 //    @Override
 //    public ScheduleResponseDto getSchedule(Long id) {

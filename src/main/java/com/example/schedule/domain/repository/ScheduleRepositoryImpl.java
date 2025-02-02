@@ -48,27 +48,37 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         return new ScheduleResponseDto(id.longValue(), userId, schedule.getTodo(), createTimeFormat, createTimeFormat);
     }
 
-//    @Override
-//    public List<ScheduleResponseDto> findSchedules(String author, String update) {
-//
-//        String sql = "select * from schedule";
-//
-//        if (isEmpty(author, update)) {
-//            return jdbcTemplate.query(sql, scheduleRowMapper());
-//        }
-//        if (!StringUtils.hasText(author)) {
-//            sql += " where date_format(update_date, '%Y-%m-%d')  = ? order by update_date desc";
-//            return jdbcTemplate.query(sql, scheduleRowMapper(), update);
-//        }
-//        if (!StringUtils.hasText(update)) {
-//            sql += " where author = ? order by update_date desc";
-//            return jdbcTemplate.query(sql, scheduleRowMapper(), author);
-//        }
-//
-//        sql += " where author = ? or date_format(update_date, '%Y-%m-%d')  = ? order by update_date desc";
-//        return jdbcTemplate.query(sql, scheduleRowMapper(),author, update);
-//    }
-//
+    @Override
+    public List<ScheduleResponseDto> findSchedulesById(Long userId, String startDate, String endDate) {
+
+        String sql = "select * from schedules where user_id = ?";
+        List<ScheduleResponseDto> result = jdbcTemplate.query(sql, scheduleRowMapper(), userId);
+
+        //일정이 없는 경우 예외처리
+        if (result.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"일정이 존재하지 않습니다.");
+        }
+
+        //조건이 존재하지 않을 때
+        if (isEmpty(startDate, endDate)) {
+            sql += " order by update_date desc";
+            return jdbcTemplate.query(sql, scheduleRowMapper(), userId);
+        }
+        //endDate 조건이 있는 경우
+        if (!StringUtils.hasText(startDate)) {
+            sql += " and date_format(update_date, '%Y-%m-%d')  <= ? order by update_date desc";
+            return jdbcTemplate.query(sql, scheduleRowMapper(),userId, endDate);
+        }
+        //startDate 조건이 있는 경우
+        if (!StringUtils.hasText(endDate)) {
+            sql += " and date_format(update_date, '%Y-%m-%d') >= ? order by update_date desc";
+            return jdbcTemplate.query(sql, scheduleRowMapper(),userId, startDate);
+        }
+
+        sql += " and date_format(update_date, '%Y-%m-%d') between ? and ? order by update_date desc";
+        return jdbcTemplate.query(sql, scheduleRowMapper(),userId, startDate, endDate);
+    }
+
 //    @Override
 //    public ScheduleResponseDto findSchedule(Long id) {
 //        List<ScheduleResponseDto> result = jdbcTemplate.query("select * from schedule where id = ?", scheduleRowMapper(), id);
@@ -108,20 +118,20 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         return create.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
-//    private RowMapper<ScheduleResponseDto> scheduleRowMapper() {
-//        return new RowMapper<ScheduleResponseDto>() {
-//            @Override
-//            public ScheduleResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-//                return new ScheduleResponseDto(
-//                        rs.getLong("id"),
-//                        rs.getString("author"),
-//                        rs.getString("todo"),
-//                        rs.getTimestamp("create_date").toLocalDateTime(),
-//                        rs.getTimestamp("update_date").toLocalDateTime()
-//                );
-//            }
-//        };
-//    }
+    private RowMapper<ScheduleResponseDto> scheduleRowMapper() {
+        return new RowMapper<ScheduleResponseDto>() {
+            @Override
+            public ScheduleResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return new ScheduleResponseDto(
+                        rs.getLong("schedule_id"),
+                        rs.getLong("user_id"),
+                        rs.getString("todo"),
+                        localDateTimeFormat(rs.getTimestamp("create_date").toLocalDateTime()),
+                        localDateTimeFormat(rs.getTimestamp("update_date").toLocalDateTime())
+                );
+            }
+        };
+    }
 
     private boolean isEmpty(String value1, String value2) {
         return !StringUtils.hasText(value1) && ! StringUtils.hasText(value2);
