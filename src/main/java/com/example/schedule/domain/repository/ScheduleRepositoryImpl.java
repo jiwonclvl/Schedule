@@ -39,8 +39,6 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         //사용자에게 보여줄 날짜 출력 형식 변경 (YYYY-MM-DD로 변경)
         String createTimeFormat = localDateTimeFormat(schedule.getCreateAt());
 
-        System.out.println("UserId = " + schedule.getUserId());
-
         //입력한 user_id가 존재하지 않는 경우
         String sql = "SELECT user_id FROM users WHERE user_id = ?";
         List<Long> userId = jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("user_id"), schedule.getUserId());
@@ -99,41 +97,50 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     }
 
     @Override
-    public int updateSchedule(Long scheduleId, Long userId, String password, String todo) {
+    public void updateSchedule(Long scheduleId, String password, String todo) {
 
         LocalDateTime update = LocalDateTime.now();
-        String storedPassword = jdbcTemplate.queryForObject(
-                "SELECT password FROM users WHERE user_id = ?", String.class, userId
-        );
+        String sql = "SELECT u.password FROM users u INNER JOIN schedules s on u.user_id = s.user_id  where schedule_id = ?";
 
-        System.out.println("Password = " + password);
-        System.out.println("storedPassword = " + storedPassword);
+        try {
+            String storedPassword = jdbcTemplate.queryForObject(
+                    sql, String.class, scheduleId
+            );
 
-        //비밀번호 검증
-        if(!password.equals(storedPassword)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"비밀번호가 일치하지 않습니다.");
+            //비밀번호 검증
+            if(!password.equals(storedPassword)) {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"비밀번호가 일치하지 않습니다.");
+            }
+
+        } catch (EmptyResultDataAccessException e) {
+            return;
         }
 
-        //할일 수정하기
-        return jdbcTemplate.update(
+        jdbcTemplate.update(
                 "update schedules set todo = ?, update_date = ? where schedule_id = ?", todo, update, scheduleId
         );
     }
 
-    //일정 삭제하기
     @Override
-    public int deleteSchedule(Long scheduleId, Long userId, String password) {
+    public void deleteSchedule(Long scheduleId, String password) {
 
-        String storedPassword = jdbcTemplate.queryForObject(
-                "SELECT password FROM users WHERE user_id = ?", String.class, userId
-        );
+        String sql = "SELECT u.password FROM users u INNER JOIN schedules s on u.user_id = s.user_id  where schedule_id = ?";
 
-        //비밀번호 검증
-        if(!password.equals(storedPassword)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"비밀번호가 일치하지 않습니다.");
+        try {
+            String storedPassword = jdbcTemplate.queryForObject(
+                    sql, String.class, scheduleId
+            );
+
+            //비밀번호 검증
+            if(!password.equals(storedPassword)) {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"비밀번호가 일치하지 않습니다.");
+            }
+
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "일정이 존재하지 않습니다.");
         }
 
-        return jdbcTemplate.update("delete from schedules where schedule_id = ? and user_id= ?", scheduleId,userId);
+        jdbcTemplate.update("delete from schedules where schedule_id = ?", scheduleId);
     }
 
     //날짜 출력 형식 변경

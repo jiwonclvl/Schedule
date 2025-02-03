@@ -58,10 +58,10 @@ public class ScheduleController implements ScheduleControllerDocs {
     @DeleteMapping("/{scheduleId}")
     public ResponseEntity<Void> deleteSchedule(
             @PathVariable Long scheduleId,
-            @RequestBody ScheduleRequestDto dto
+            @RequestBody String password
     ) {
 
-        scheduleService.deleteSchedule(scheduleId, dto);
+        scheduleService.deleteSchedule(scheduleId, password);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

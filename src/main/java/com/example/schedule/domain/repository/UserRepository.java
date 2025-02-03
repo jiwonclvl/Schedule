@@ -8,6 +8,6 @@ public interface UserRepository {
 
     public UserResponseDto findUser(Long userId);
 
-    public int updateUser(Long userId, String author, String password);
+    public void updateUser(Long userId, String author, String password);
 
 }

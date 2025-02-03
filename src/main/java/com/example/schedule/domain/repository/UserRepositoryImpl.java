@@ -3,6 +3,7 @@ package com.example.schedule.domain.repository;
 import com.example.schedule.application.dto.ScheduleResponseDto;
 import com.example.schedule.application.dto.UserResponseDto;
 import com.example.schedule.domain.entity.User;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -57,20 +58,25 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public int updateUser(Long userId, String author, String password) {
+    public void updateUser(Long userId, String author, String password) {
         LocalDateTime update = LocalDateTime.now();
 
-        String storedPassword = jdbcTemplate.queryForObject(
-                "select password from users where user_id = ?", String.class, userId
-        );
+        try {
+            String storedPassword = jdbcTemplate.queryForObject(
+                    "select password from users where user_id = ?", String.class, userId
+            );
 
-        //비밀번호 검증
-        if(!password.equals(storedPassword)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다.");
+            //비밀번호 검증
+            if(!password.equals(storedPassword)) {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다.");
+            }
+
+        } catch (EmptyResultDataAccessException e) {
+            return;
         }
 
         //작성자명 수정
-        return jdbcTemplate.update("update users set author = ?, update_date = ? where user_id = ?", author,update, userId);
+        jdbcTemplate.update("update users set author = ?, update_date = ? where user_id = ?", author,update, userId);
     }
 
     //날짜 출력 형식 변경

@@ -13,8 +13,8 @@ public interface ScheduleRepository {
 
     ScheduleResponseDto findScheduleByScheduleId(Long scheduleId);
 
-    int updateSchedule(Long scheduleId,Long userId, String password, String todo);
+    void updateSchedule(Long scheduleId, String password, String todo);
 
-    int deleteSchedule(Long scheduleId, Long userId, String password);
+    void deleteSchedule(Long scheduleId, String password);
 
 }

@@ -33,11 +33,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto updateUser(Long userId, UserRequestDto dto) {
-        int update = userRepository.updateUser(userId, dto.getAuthor(), dto.getPassword());
 
-        if(update == 0){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "일정이 존재하지 않습니다.");
+        if (isRequiredFieldEmpty(dto.getAuthor(), dto.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "작성자명과 비밀번호는 반드시 입력되어야 합니다.");
         }
+
+        userRepository.updateUser(userId, dto.getAuthor(), dto.getPassword());
 
         return userRepository.findUser(userId);
     }
