@@ -32,6 +32,4 @@ public class UserController implements UserControllerDocs {
     ) {
         return new ResponseEntity<>(userService.updateUser(userId, dto), HttpStatus.OK);
     }
-
-
 }
