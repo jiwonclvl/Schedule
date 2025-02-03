@@ -61,12 +61,6 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     public List<ScheduleResponseDto> findSchedulesByUserId(Long userId, String startDate, String endDate) {
 
         String sql = "select * from schedules where user_id = ?";
-        List<ScheduleResponseDto> result = jdbcTemplate.query(sql, scheduleRowMapper(), userId);
-
-        //일정이 없는 경우 예외처리
-        if (result.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"일정이 존재하지 않습니다.");
-        }
 
         //조건이 존재하지 않을 때
         if (isEmpty(startDate, endDate)) {

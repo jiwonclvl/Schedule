@@ -36,6 +36,13 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public List<ScheduleResponseDto> getSchedules(Long userId, String startDate, String endDate) {
 
+        List<ScheduleResponseDto> result = scheduleRepository.findSchedulesByUserId(userId, startDate, endDate);
+
+        //일정이 없는 경우 예외처리
+        if (result.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"일정이 존재하지 않습니다.");
+        }
+
         return scheduleRepository.findSchedulesByUserId(userId, startDate, endDate);
     }
 
