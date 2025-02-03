@@ -1,7 +1,8 @@
 package com.example.schedule.presentation.controller;
 
+import com.example.schedule.application.dto.ScheduleUpdateRequestDto;
 import com.example.schedule.docs.ScheduleControllerDocs;
-import com.example.schedule.application.dto.ScheduleRequestDto;
+import com.example.schedule.application.dto.ScheduleCreateRequestDto;
 import com.example.schedule.application.dto.ScheduleResponseDto;
 import com.example.schedule.application.service.ScheduleService;
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,7 @@ public class ScheduleController implements ScheduleControllerDocs {
     @Override
     @PostMapping()
     public ResponseEntity<ScheduleResponseDto> createSchedule(
-            @RequestBody ScheduleRequestDto dto) {
+            @RequestBody ScheduleCreateRequestDto dto) {
 
        return new ResponseEntity<>(scheduleService.createSchedule(dto),HttpStatus.CREATED);
     }
@@ -49,7 +50,7 @@ public class ScheduleController implements ScheduleControllerDocs {
     @PatchMapping("/{scheduleId}")
     public ResponseEntity<ScheduleResponseDto> updateSchedule(
             @PathVariable Long scheduleId,
-            @RequestBody ScheduleRequestDto dto
+            @RequestBody ScheduleUpdateRequestDto dto
     ) {
 
         return new ResponseEntity<>(scheduleService.updateSchedule(scheduleId, dto),HttpStatus.OK);

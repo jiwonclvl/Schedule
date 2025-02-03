@@ -1,7 +1,8 @@
 package com.example.schedule.application.service;
 
-import com.example.schedule.application.dto.ScheduleRequestDto;
+import com.example.schedule.application.dto.ScheduleCreateRequestDto;
 import com.example.schedule.application.dto.ScheduleResponseDto;
+import com.example.schedule.application.dto.ScheduleUpdateRequestDto;
 import com.example.schedule.domain.entity.Schedule;
 import com.example.schedule.domain.repository.ScheduleRepository;
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Transactional
     @Override
-    public ScheduleResponseDto createSchedule(ScheduleRequestDto dto) {
+    public ScheduleResponseDto createSchedule(ScheduleCreateRequestDto dto) {
 
         //사용자 아이디를 입력하지 않은 경우
         if (dto.getUserId() == null) {
@@ -47,7 +48,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Transactional
     @Override
-    public ScheduleResponseDto updateSchedule(Long scheduleId, ScheduleRequestDto dto) {
+    public ScheduleResponseDto updateSchedule(Long scheduleId, ScheduleUpdateRequestDto dto) {
 
         //비밀번호를 입력하지 않은 경우
         if (!StringUtils.hasText(dto.getPassword())) {
