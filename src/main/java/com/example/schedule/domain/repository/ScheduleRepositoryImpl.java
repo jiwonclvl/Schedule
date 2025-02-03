@@ -2,6 +2,7 @@ package com.example.schedule.domain.repository;
 
 import com.example.schedule.application.dto.ScheduleResponseDto;
 import com.example.schedule.domain.entity.Schedule;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -36,7 +37,17 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         insert.withTableName("schedules").usingGeneratedKeyColumns("schedule_id");
 
         //사용자에게 보여줄 날짜 출력 형식 변경 (YYYY-MM-DD로 변경)
-         String createTimeFormat = localDateTimeFormat(schedule.getCreateAt());
+        String createTimeFormat = localDateTimeFormat(schedule.getCreateAt());
+
+        System.out.println("UserId = " + schedule.getUserId());
+
+        //입력한 user_id가 존재하지 않는 경우
+        String sql = "SELECT user_id FROM users WHERE user_id = ?";
+        List<Long> userId = jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("user_id"), schedule.getUserId());
+
+        if (userId.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자가 존재하지 않습니다.");
+        }
 
         Map<String, Object> params = new HashMap<>();
         params.put("user_id", schedule.getUserId());

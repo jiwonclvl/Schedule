@@ -24,6 +24,11 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public ScheduleResponseDto createSchedule(ScheduleRequestDto dto) {
 
+        //사용자 아이디를 입력하지 않은 경우
+        if (dto.getUserId() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "사용자 아이디는 반드시 입력되어야 합니다.");
+        }
+
         Schedule schedule = new Schedule(dto.getUserId(), dto.getTodo());
         return scheduleRepository.saveSchedule(schedule);
     }
