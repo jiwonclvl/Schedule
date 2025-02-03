@@ -3,7 +3,7 @@ package com.example.schedule.application.dto;
 import lombok.Getter;
 
 @Getter
-public class ScheduleCreateRequestDto {
+public class ScheduleRequestDto {
 
     private Long userId;
 
