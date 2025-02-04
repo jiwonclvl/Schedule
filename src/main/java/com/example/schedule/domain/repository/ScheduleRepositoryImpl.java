@@ -36,10 +36,10 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 
         insert.withTableName("schedules").usingGeneratedKeyColumns("schedule_id");
 
-        //사용자에게 보여줄 날짜 출력 형식 변경 (YYYY-MM-DD로 변경)
+        //응답 데이터 날짜 출력 형식 변경 (YYYY-MM-DD로 변경)
         String createTimeFormat = localDateTimeFormat(schedule.getCreateAt());
 
-        //입력한 user_id가 존재하지 않는 경우
+        //작성자 ID가 존재하지 않는 경우
         String sql = "SELECT user_id FROM users WHERE user_id = ?";
         List<Long> userId = jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("user_id"), schedule.getUserId());
 
@@ -60,24 +60,26 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     @Override
     public List<ScheduleResponseDto> findSchedulesByUserId(Long userId, String startDate, String endDate) {
 
+        //기본 베이스 query
         String sql = "select * from schedules where user_id = ?";
 
-        //조건이 존재하지 않을 때
+        //날짜 조건이 입력되지 않은 경우 -> 전체 일정 조회
         if (isEmpty(startDate, endDate)) {
             sql += " order by update_date desc";
             return jdbcTemplate.query(sql, scheduleRowMapper(), userId);
         }
-        //endDate 조건이 있는 경우
+        //endDate(마지막 날짜) 조건만 있는 경우 -> ~ endDate 일정 조회
         if (!StringUtils.hasText(startDate)) {
             sql += " and date_format(update_date, '%Y-%m-%d')  <= ? order by update_date desc";
             return jdbcTemplate.query(sql, scheduleRowMapper(),userId, endDate);
         }
-        //startDate 조건이 있는 경우
+        //startDate(시작 날짜) 조건만 있는 경우 -> startDate ~ 일정 조회
         if (!StringUtils.hasText(endDate)) {
             sql += " and date_format(update_date, '%Y-%m-%d') >= ? order by update_date desc";
             return jdbcTemplate.query(sql, scheduleRowMapper(),userId, startDate);
         }
 
+        //startDate, endDate 조건 모두 있는 경우 -> startDate ~ endDate 일정 조회
         sql += " and date_format(update_date, '%Y-%m-%d') between ? and ? order by update_date desc";
         return jdbcTemplate.query(sql, scheduleRowMapper(),userId, startDate, endDate);
     }
@@ -93,7 +95,9 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
     @Override
     public void updateSchedule(Long scheduleId, String password, String todo) {
 
+        //수정일 update
         LocalDateTime update = LocalDateTime.now();
+
         String sql = "SELECT u.password FROM users u INNER JOIN schedules s on u.user_id = s.user_id  where schedule_id = ?";
 
         try {
@@ -102,7 +106,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
             );
 
             //비밀번호 검증
-            if(!password.equals(storedPassword)) {
+            if (!password.equals(storedPassword)) {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"비밀번호가 일치하지 않습니다.");
             }
 
@@ -110,6 +114,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
             return;
         }
 
+        //일정의 `할 일(todo)`수정
         jdbcTemplate.update(
                 "update schedules set todo = ?, update_date = ? where schedule_id = ?", todo, update, scheduleId
         );
@@ -126,7 +131,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
             );
 
             //비밀번호 검증
-            if(!password.equals(storedPassword)) {
+            if (!password.equals(storedPassword)) {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"비밀번호가 일치하지 않습니다.");
             }
 
@@ -137,7 +142,6 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         jdbcTemplate.update("delete from schedules where schedule_id = ?", scheduleId);
     }
 
-    //날짜 출력 형식 변경
     private String localDateTimeFormat(LocalDateTime create) {
         return create.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
