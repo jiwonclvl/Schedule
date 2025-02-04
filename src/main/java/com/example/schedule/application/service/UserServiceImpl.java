@@ -23,17 +23,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto createUser(UserRequestDto dto) {
 
+        //필수 값이 `null or ""`인지 확인 후 `null or ""`이면 예외 처리
         if (isRequiredFieldEmpty(dto.getAuthor(), dto.getPassword())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "작성자명과 비밀번호는 반드시 입력되어야 합니다.");
         }
 
+        //작성자 생성
         User user = new User(dto.getAuthor(), dto.getPassword(), dto.getEmail());
+
         return userRepository.saveUser(user);
     }
 
     @Override
     public UserResponseDto updateUser(Long userId, UserRequestDto dto) {
 
+        //필수 값이 `null or ""`인지 확인 후 `null or ""`이면 예외 처리
         if (isRequiredFieldEmpty(dto.getAuthor(), dto.getPassword())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "작성자명과 비밀번호는 반드시 입력되어야 합니다.");
         }
