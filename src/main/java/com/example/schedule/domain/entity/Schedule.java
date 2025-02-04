@@ -20,7 +20,11 @@ public class Schedule {
     public Schedule(Long userId, String todo) {
         this.userId = userId;
         this.todo = todo;
-        this.createAt = LocalDateTime.now();//객체 생성 시 현재 시간
+
+        //객체 생성 시 현재 시간
+        this.createAt = LocalDateTime.now();
+
+        //첫 일정 등록 시 수정일 = 작성일
         this.updateAt = LocalDateTime.now();
     }
 }
