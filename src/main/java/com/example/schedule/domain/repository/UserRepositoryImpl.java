@@ -1,6 +1,5 @@
 package com.example.schedule.domain.repository;
 
-import com.example.schedule.application.dto.ScheduleResponseDto;
 import com.example.schedule.application.dto.UserResponseDto;
 import com.example.schedule.domain.entity.User;
 import org.springframework.dao.EmptyResultDataAccessException;
