@@ -69,7 +69,7 @@ public class UserRepositoryImpl implements UserRepository {
             );
 
             //비밀번호 검증
-            if(!password.equals(storedPassword)) {
+            if (!password.equals(storedPassword)) {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다.");
             }
 
