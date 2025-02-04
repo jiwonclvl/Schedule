@@ -36,7 +36,7 @@ public class UserRepositoryImpl implements UserRepository {
         SimpleJdbcInsert insert = new SimpleJdbcInsert(this.jdbcTemplate);
         insert.withTableName("users").usingGeneratedKeyColumns("user_id");
 
-        //사용자에게 응답 데이터 날짜 출력 형식 변경 (YYYY-MM-DD로 변경)
+        //응답 데이터 날짜 출력 형식 변경 (YYYY-MM-DD로 변경)
         String createTimeFormat = localDateTimeFormat(user.getCreateAt());
 
         Map<String, Object> parameters = new HashMap<>();
@@ -59,6 +59,8 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void updateUser(Long userId, String author, String password) {
+
+        //수정일 update
         LocalDateTime update = LocalDateTime.now();
 
         try {
@@ -79,7 +81,7 @@ public class UserRepositoryImpl implements UserRepository {
         jdbcTemplate.update("update users set author = ?, update_date = ? where user_id = ?", author,update, userId);
     }
 
-    //날짜 출력 형식 변경
+
     private String localDateTimeFormat(LocalDateTime create) {
         return create.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
