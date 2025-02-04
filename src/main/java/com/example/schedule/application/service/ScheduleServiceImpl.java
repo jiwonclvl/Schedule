@@ -24,21 +24,24 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public ScheduleResponseDto createSchedule(ScheduleRequestDto dto) {
 
-        //사용자 아이디를 입력하지 않은 경우
+        //작성자 아이디를 입력하지 않은 경우
         if (dto.getUserId() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "사용자 아이디는 반드시 입력되어야 합니다.");
         }
 
+        //일정 생성
         Schedule schedule = new Schedule(dto.getUserId(), dto.getTodo());
+
         return scheduleRepository.saveSchedule(schedule);
     }
 
     @Override
     public List<ScheduleResponseDto> getSchedules(Long userId, String startDate, String endDate) {
 
+        //작성자 ID를 통한 일정 조회 결과
         List<ScheduleResponseDto> result = scheduleRepository.findSchedulesByUserId(userId, startDate, endDate);
 
-        //일정이 없는 경우 예외처리
+        //일정이 존재하지 않은 경우 예외처리
         if (result.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,"일정이 존재하지 않습니다.");
         }
